@@ -1,0 +1,45 @@
+.PHONY: install lock format lint test train serve mlflow dvc clean
+
+# Instalar dependências
+install:
+	uv sync
+
+# Atualizar lockfile
+lock:
+	uv lock
+
+# Formatar código
+format:
+	uv run black src tests
+	uv run isort src tests
+
+# Lint
+lint:
+	uv run flake8 src tests
+
+# Testes
+test:
+	uv run pytest --cov=src --cov-fail-under=60
+
+# Rodar treino com MLflow
+train:
+	uv run python src/models/train.py
+
+# Subir API
+serve:
+	uv run uvicorn src.serving.app:app --reload --host 0.0.0.0 --port 8000
+
+# Subir MLflow UI
+mlflow:
+	uv run mlflow server \
+		--backend-store-uri sqlite:///mlflow.db \
+		--default-artifact-root ./mlruns \
+		-p 5000
+
+# Rodar pipeline DVC
+dvc:
+	dvc repro
+
+# Limpeza
+clean:
+	rm -rf __pycache__ .pytest_cache .coverage mlruns
