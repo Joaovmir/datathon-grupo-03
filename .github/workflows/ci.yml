@@ -18,7 +18,7 @@ jobs:
         run: pip install uv
 
       - name: Install dependencies
-        run: uv sync
+        run: make install
 
       - name: Run pre-commit
         run: uv run pre-commit run --all-files
