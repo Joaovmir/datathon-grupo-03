@@ -1,8 +1,11 @@
-.PHONY: install lock format lint test train serve mlflow dvc clean
+.PHONY: instaldep install lock format lint test train serve mlflow dvc clean
 
 # Instalar dependências
+installdep:
+	uv sync 
+# Instalar dependências e grupos
 install:
-	uv sync
+	uv sync --group eda --group model --group serving --group monitoring --group data --group experiment
 
 # Atualizar lockfile
 lock:

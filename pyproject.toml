@@ -1,24 +1,44 @@
 [project]
 name = "datathon-grupo-03"
 version = "0.1.0"
-description = "Add your description here"
+description = "Projeto de risco de crédito"
 readme = "README.md"
 requires-python = ">=3.12"
+
 dependencies = [
-    "dvc>=3.67.0",
-    "evidently>=0.7.21",
-    "fastapi>=0.135.2",
-    "mlflow>=3.10.1",
     "numpy>=2.4.3",
     "pandas>=2.3.3",
-    "prometheus-client>=0.24.1",
     "pydantic>=2.12.5",
-    "scikit-learn>=1.8.0",
-    "torch>=2.11.0",
-    "uvicorn>=0.42.0",
 ]
 
 [dependency-groups]
+eda = [
+    "seaborn>=0.13.2",
+]
+
+model = [
+    "scikit-learn>=1.8.0",
+    "torch>=2.11.0",
+]
+
+serving = [
+    "fastapi>=0.135.2",
+    "uvicorn>=0.42.0",
+]
+
+monitoring = [
+    "evidently>=0.7.21",
+    "prometheus-client>=0.24.1",
+]
+
+data = [
+    "dvc>=3.67.0",
+]
+
+experiment = [
+    "mlflow>=3.10.1",
+]
+
 dev = [
     "black>=26.3.1",
     "flake8>=7.3.0",
