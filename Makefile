@@ -2,7 +2,7 @@
 
 # Instalar dependências
 installdep:
-	uv sync 
+	uv sync
 # Instalar dependências e grupos
 install:
 	uv sync --group eda --group model --group serving --group monitoring --group data --group experiment
