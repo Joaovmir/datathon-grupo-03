@@ -81,7 +81,7 @@ pip install uv
 Dependências base:
 
 ```bash
-uv sync 
+uv sync
 ```
 Todas as dependências:
 
