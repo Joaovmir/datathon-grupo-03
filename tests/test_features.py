@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import joblib
 import numpy as np
 import pandas as pd
 import pytest
@@ -12,6 +13,7 @@ from features.feature_engineering import (
     select_features,
     split_features_target,
     split_train_test,
+    transform_features,
 )
 
 # ------------------------
@@ -27,7 +29,7 @@ def sample_data() -> pd.DataFrame:
     Returns:
         pd.DataFrame: Dataset with numeric features and binary target.
     """
-    np.random.seed(42)  # garante reprodutibilidade
+    np.random.seed(42)
 
     return pd.DataFrame(
         {
@@ -163,22 +165,23 @@ def test_save_processed_data(tmp_path: Path):
 def test_scale_features(sample_data: pd.DataFrame, temp_scaler_path: Path):
     """
     Ensure scaling preserves shape and creates scaler artifact.
+    Only X_train is passed — X_test is not involved in fitting or transforming here.
     """
     df = select_features(sample_data)
     X, y = split_features_target(df)
 
-    X_train, X_test, _, _ = split_train_test(X, y)
+    X_train, _, _, _ = split_train_test(X, y)
 
-    X_train_scaled, X_test_scaled = scale_features(X_train, X_test, temp_scaler_path)
+    X_train_scaled = scale_features(X_train, temp_scaler_path)
 
     assert X_train.shape == X_train_scaled.shape
-    assert X_test.shape == X_test_scaled.shape
     assert temp_scaler_path.exists()
 
 
 def test_run_pipeline(sample_data: pd.DataFrame, tmp_path: Path, monkeypatch):
     """
     Test full pipeline execution including file outputs.
+    Verifies that train.csv is scaled and test.csv is saved raw.
     """
     raw_file = tmp_path / "raw.csv"
     sample_data.to_csv(raw_file, index=False)
@@ -199,6 +202,16 @@ def test_run_pipeline(sample_data: pd.DataFrame, tmp_path: Path, monkeypatch):
     assert not train_df.empty
     assert not test_df.empty
     assert "loan_status" in train_df.columns
+    assert "loan_status" in test_df.columns
+
+    # test.csv must be unscaled: values should match original feature ranges
+    feature_cols = [
+        "borrower_income",
+        "debt_to_income",
+        "num_of_accounts",
+        "derogatory_marks",
+    ]
+    assert (test_df[feature_cols].abs() > 1).any().any()
 
 
 # ------------------------
@@ -208,41 +221,115 @@ def test_run_pipeline(sample_data: pd.DataFrame, tmp_path: Path, monkeypatch):
 
 def test_no_nulls_after_processing(sample_data: pd.DataFrame, temp_scaler_path: Path):
     """
-    Ensure no null values exist after scaling.
+    Ensure no null values exist in scaled training data.
+    Test set is transformed separately via transform_features().
     """
     df = select_features(sample_data)
     X, y = split_features_target(df)
 
     X_train, X_test, _, _ = split_train_test(X, y)
-    X_train_scaled, X_test_scaled = scale_features(X_train, X_test, temp_scaler_path)
+    X_train_scaled = scale_features(X_train, temp_scaler_path)
+    X_test_scaled = transform_features(X_test, temp_scaler_path)
 
     assert not X_train_scaled.isnull().any().any()
     assert not X_test_scaled.isnull().any().any()
 
 
-def test_scaled_data_mean_std(sample_data: pd.DataFrame, temp_scaler_path: Path):
+def test_train_scaled_mean_std(sample_data: pd.DataFrame, temp_scaler_path: Path):
     """
-    Validate that scaled features have mean ~0 and std ~1.
+    Validate that TRAINING scaled features have mean ~0 and std ~1.
+
+    This guarantee applies only to the training set, since the scaler is
+    fitted exclusively on it. The test set is transformed using training
+    statistics and will generally not have mean=0 or std=1.
     """
     df = select_features(sample_data)
     X, y = split_features_target(df)
 
-    X_train, X_test, _, _ = split_train_test(X, y)
-    X_train_scaled, _ = scale_features(X_train, X_test, temp_scaler_path)
+    X_train, _, _, _ = split_train_test(X, y)
+    X_train_scaled = scale_features(X_train, temp_scaler_path)
 
     assert np.allclose(X_train_scaled.mean(), 0, atol=1e-1)
     assert np.allclose(X_train_scaled.std(), 1, atol=1e-1)
 
 
-def test_feature_ranges(sample_data: pd.DataFrame, temp_scaler_path: Path):
+def test_test_set_not_normalized(sample_data: pd.DataFrame, temp_scaler_path: Path):
     """
-    Ensure scaled values remain within reasonable bounds.
+    Confirm that the test set does NOT necessarily have mean=0 or std=1.
+
+    The scaler is fitted only on training data. Applying it to the test set
+    uses training statistics, so test features will generally deviate from
+    standard normal — which is the correct and expected behavior.
     """
     df = select_features(sample_data)
     X, y = split_features_target(df)
 
     X_train, X_test, _, _ = split_train_test(X, y)
-    X_train_scaled, _ = scale_features(X_train, X_test, temp_scaler_path)
+    scale_features(X_train, temp_scaler_path)
+    X_test_scaled = transform_features(X_test, temp_scaler_path)
+
+    # At least one feature should deviate meaningfully from mean=0
+    assert not np.allclose(X_test_scaled.mean(), 0, atol=1e-10)
+
+
+def test_scaler_fitted_only_on_train(sample_data: pd.DataFrame, temp_scaler_path: Path):
+    """
+    Verify the persisted scaler statistics match the training set, not the test set.
+
+    The scaler's mean_ and scale_ must reflect training data exclusively.
+    Using test statistics here would indicate data leakage.
+    """
+    df = select_features(sample_data)
+    X, y = split_features_target(df)
+
+    X_train, X_test, _, _ = split_train_test(X, y)
+    scale_features(X_train, temp_scaler_path)
+
+    scaler = joblib.load(temp_scaler_path)
+
+    # Scaler parameters must match training set statistics
+    assert np.allclose(scaler.mean_, X_train.mean().values, atol=1e-6)
+    assert np.allclose(scaler.scale_, X_train.std(ddof=0).values, atol=1e-6)
+
+    # Scaler parameters must NOT match test set statistics (different distribution)
+    assert not np.allclose(scaler.mean_, X_test.mean().values, atol=1e-1)
+
+
+def test_transform_features_uses_train_statistics(
+    sample_data: pd.DataFrame, temp_scaler_path: Path
+):
+    """
+    Ensure transform_features applies the pre-fitted scaler correctly.
+
+    Scales X_test via transform_features() and verifies the result matches
+    what a manual scaler.transform() call would produce — confirming the
+    saved artifact is used without re-fitting.
+    """
+    df = select_features(sample_data)
+    X, y = split_features_target(df)
+
+    X_train, X_test, _, _ = split_train_test(X, y)
+    scale_features(X_train, temp_scaler_path)
+
+    # Simulate evaluation: load scaler and transform test set independently
+    X_test_scaled = transform_features(X_test, temp_scaler_path)
+
+    # Manually verify using the saved scaler directly
+    scaler = joblib.load(temp_scaler_path)
+    expected = pd.DataFrame(scaler.transform(X_test), columns=X_test.columns)
+
+    pd.testing.assert_frame_equal(X_test_scaled, expected)
+
+
+def test_feature_ranges(sample_data: pd.DataFrame, temp_scaler_path: Path):
+    """
+    Ensure scaled training values remain within reasonable bounds.
+    """
+    df = select_features(sample_data)
+    X, y = split_features_target(df)
+
+    X_train, _, _, _ = split_train_test(X, y)
+    X_train_scaled = scale_features(X_train, temp_scaler_path)
 
     assert (X_train_scaled.abs() < 10).all().all()
 
@@ -255,7 +342,8 @@ def test_output_shapes(sample_data: pd.DataFrame, temp_scaler_path: Path):
     X, y = split_features_target(df)
 
     X_train, X_test, y_train, y_test = split_train_test(X, y)
-    X_train_scaled, X_test_scaled = scale_features(X_train, X_test, temp_scaler_path)
+    X_train_scaled = scale_features(X_train, temp_scaler_path)
+    X_test_scaled = transform_features(X_test, temp_scaler_path)
 
     assert X_train_scaled.shape[0] == y_train.shape[0]
     assert X_test_scaled.shape[0] == y_test.shape[0]
@@ -306,8 +394,8 @@ def test_scaler_constant_values(temp_scaler_path: Path):
     )
 
     X, y = split_features_target(df)
-    X_train, X_test, _, _ = split_train_test(X, y)
+    X_train, _, _, _ = split_train_test(X, y)
 
-    X_train_scaled, _ = scale_features(X_train, X_test, temp_scaler_path)
+    X_train_scaled = scale_features(X_train, temp_scaler_path)
 
     assert not X_train_scaled.isnull().any().any()
