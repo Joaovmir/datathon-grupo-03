@@ -1,0 +1,22 @@
+schema: '2.0'
+stages:
+  feature_engineering:
+    cmd: python src/features/feature_engineering.py
+    deps:
+    - path: data/raw/lending_data.csv
+      hash: md5
+      md5: 99e05298a7ba7cfce4ab52d0e2319136
+      size: 4165635
+    - path: src/features/feature_engineering.py
+      hash: md5
+      md5: 201c52c5bd3c6321de651a98447e14ca
+      size: 4567
+    outs:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 1de375f3f3d9250ea46216662c9adeaa
+      size: 1260358
+    - path: data/processed/train.csv
+      hash: md5
+      md5: de0d833d716bdbd7b104dd360c87ac78
+      size: 5039700
