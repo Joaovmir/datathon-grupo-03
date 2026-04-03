@@ -62,7 +62,7 @@ datathon-grupo-03/
 ### 1. Clonar repositório
 
 ```bash
-git clone <repo>
+git clone https://github.com/Joaovmir/datathon-grupo-03
 cd datathon-grupo-03
 ```
 
@@ -78,8 +78,15 @@ pip install uv
 
 ### 3. Instalar dependências
 
+Dependências base:
+
 ```bash
-uv sync
+uv sync 
+```
+Todas as dependências:
+
+```bash
+uv sync --group eda --group model --group serving --group monitoring --group data --group experiment
 ```
 
 ---
@@ -97,7 +104,7 @@ uv run pre-commit install
 Rodar testes com cobertura:
 
 ```bash
-make test
+uv run pytest --cov=src --cov-fail-under=60
 ```
 
 Critério mínimo:
@@ -113,8 +120,9 @@ Critério mínimo:
 Rodar lint + format:
 
 ```bash
-make format
-make lint
+uv run black src tests
+uv run isort src tests
+uv run flake8 src tests
 ```
 
 ---
@@ -122,7 +130,7 @@ make lint
 ## 🤖 Treinamento de modelo
 
 ```bash
-make train
+uv run python src/models/train.py
 ```
 
 Os experimentos são rastreados com **MLflow**.
@@ -134,7 +142,10 @@ Os experimentos são rastreados com **MLflow**.
 Subir servidor local:
 
 ```bash
-make mlflow
+uv run mlflow server \
+    --backend-store-uri sqlite:///mlflow.db \
+    --default-artifact-root ./mlruns \
+    -p 5000
 ```
 
 Acesse:
@@ -148,7 +159,7 @@ http://localhost:5000
 ## 🌐 Servir API
 
 ```bash
-make serve
+uv run uvicorn src.serving.app:app --reload --host 0.0.0.0 --port 8000
 ```
 
 API disponível em:
@@ -164,7 +175,7 @@ http://localhost:8000
 Executar pipeline com DVC:
 
 ```bash
-make dvc
+dvc repro
 ```
 
 ---
@@ -181,7 +192,7 @@ Executa automaticamente antes de cada commit:
 Rodar manualmente:
 
 ```bash
-make lint
+uv run pre-commit run --all-files
 ```
 
 ---
@@ -190,9 +201,9 @@ make lint
 
 Pipeline configurado com GitHub Actions:
 
-Etapas:
+Etapas realizadas com o make (configuração Makefile):
 
-1. Instala dependências (`uv sync`)
+1. Instala dependências (`make install`)
 2. Executa pre-commit
 3. Executa testes (`make test`)
 
@@ -200,13 +211,16 @@ Etapas:
 
 ## 📦 Comandos úteis
 
+Comandos configurados com Makefile, configurado para o CI/CD ou comandos locais com Linux:
+
 ```bash
 make install     # instalar dependências
 make test        # rodar testes
 make train       # treinar modelo
 make serve       # subir API
 make mlflow      # subir MLflow
-make lint        # rodar pre-commit
+make precommitrun
+make lint        # rodar lint
 make format      # formatar código
 make dvc         # rodar pipeline de dados
 ```
