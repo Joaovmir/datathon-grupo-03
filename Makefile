@@ -1,4 +1,4 @@
-.PHONY: instaldep install lock format lint test train serve mlflow dvc clean
+.PHONY: instaldep install lock precommitrun format lint test train serve mlflow dvc clean
 
 # Instalar dependências
 installdep:
@@ -10,6 +10,10 @@ install:
 # Atualizar lockfile
 lock:
 	uv lock
+
+# Realizar pre-commit
+precommitrun:
+	uv run pre-commit run --all-files
 
 # Formatar código
 format:
