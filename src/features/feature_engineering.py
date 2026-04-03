@@ -92,34 +92,53 @@ def split_train_test(
 
 def scale_features(
     X_train: pd.DataFrame,
-    X_test: pd.DataFrame,
     scaler_path: Path,
-) -> Tuple[pd.DataFrame, pd.DataFrame]:
+) -> pd.DataFrame:
     """
-    Scale features using StandardScaler.
+    Fit a StandardScaler on training data and persist it to disk.
 
-    Fits scaler on training data and applies to both train and test.
+    Only the training set is used to fit the scaler. The test set must
+    NOT be passed here — it should be transformed independently at
+    evaluation time via transform_features(), using the saved artifact.
 
     Args:
-        X_train (pd.DataFrame): Training features.
-        X_test (pd.DataFrame): Test features.
-        scaler_path (Path): Path to save scaler.
+        X_train (pd.DataFrame): Training features (used to fit the scaler).
+        scaler_path (Path): Path to persist the fitted scaler artifact.
 
     Returns:
-        Tuple[pd.DataFrame, pd.DataFrame]: Scaled train and test features.
+        pd.DataFrame: Scaled training features.
     """
     scaler = StandardScaler()
 
     X_train_scaled = scaler.fit_transform(X_train)
-    X_test_scaled = scaler.transform(X_test)
 
     scaler_path.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(scaler, scaler_path)
 
-    return (
-        pd.DataFrame(X_train_scaled, columns=X_train.columns),
-        pd.DataFrame(X_test_scaled, columns=X_test.columns),
-    )
+    return pd.DataFrame(X_train_scaled, columns=X_train.columns)
+
+
+def transform_features(
+    X: pd.DataFrame,
+    scaler_path: Path,
+) -> pd.DataFrame:
+    """
+    Apply a pre-fitted scaler to new data at evaluation or inference time.
+
+    This function should be used instead of scale_features whenever the
+    scaler has already been fitted (e.g. during model evaluation or serving).
+    It guarantees the scaler is never re-fitted on unseen data.
+
+    Args:
+        X (pd.DataFrame): Features to transform.
+        scaler_path (Path): Path to the persisted fitted scaler artifact.
+
+    Returns:
+        pd.DataFrame: Scaled features using training statistics.
+    """
+    scaler = joblib.load(scaler_path)
+    X_scaled = scaler.transform(X)
+    return pd.DataFrame(X_scaled, columns=X.columns)
 
 
 def save_processed_data(
@@ -130,11 +149,16 @@ def save_processed_data(
     output_dir: Path,
 ) -> None:
     """
-    Save processed train and test datasets to disk.
+    Save processed datasets to disk.
+
+    The training set is saved already scaled (ready for model training).
+    The test set is saved in its original, unscaled form so that it can
+    simulate real incoming data at evaluation time — transformation is
+    applied on demand via transform_features() using the saved scaler.
 
     Args:
         X_train (pd.DataFrame): Scaled training features.
-        X_test (pd.DataFrame): Scaled test features.
+        X_test (pd.DataFrame): Raw (unscaled) test features.
         y_train (pd.Series): Training target.
         y_test (pd.Series): Test target.
         output_dir (Path): Directory to save processed data.
@@ -144,6 +168,8 @@ def save_processed_data(
     train_df = X_train.copy()
     train_df["loan_status"] = y_train.values
 
+    # test set is intentionally saved unscaled — apply transform_features()
+    # at evaluation time using the persisted scaler artifact
     test_df = X_test.copy()
     test_df["loan_status"] = y_test.values
 
@@ -157,8 +183,8 @@ def run_pipeline() -> None:
     - Load data
     - Select features
     - Split train/test
-    - Scale features
-    - Save processed datasets
+    - Scale training features (fit + transform); persist scaler artifact
+    - Save train (scaled) and test (raw) datasets to disk
     """
     df = load_data(RAW_PATH)
     df = select_features(df)
@@ -167,9 +193,11 @@ def run_pipeline() -> None:
 
     X_train, X_test, y_train, y_test = split_train_test(X, y)
 
-    X_train_scaled, X_test_scaled = scale_features(X_train, X_test, ARTIFACTS_PATH)
+    # scaler is fitted only on train; X_test is kept raw
+    X_train_scaled = scale_features(X_train, ARTIFACTS_PATH)
 
-    save_processed_data(X_train_scaled, X_test_scaled, y_train, y_test, PROCESSED_DIR)
+    # test set saved unscaled — transform at evaluation time via transform_features()
+    save_processed_data(X_train_scaled, X_test, y_train, y_test, PROCESSED_DIR)
 
 
 if __name__ == "__main__":
