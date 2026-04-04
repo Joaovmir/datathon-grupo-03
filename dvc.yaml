@@ -1,9 +1,30 @@
 stages:
   feature_engineering:
-    cmd: python src/features/feature_engineering.py
+    cmd: python -m src.features.feature_engineering
     deps:
       - src/features/feature_engineering.py
       - data/raw/lending_data.csv
     outs:
       - data/processed/train.csv
       - data/processed/test.csv
+      - artifacts/scaler.pkl
+
+  train:
+    cmd: python -m src.models.train
+    deps:
+      - src/models/train.py
+      - src/models/baseline.py
+      - data/processed/train.csv
+    outs:
+      - models/mlp_model.pt
+
+  evaluate_mlp:
+    cmd: python -m src.models.evaluate_mlp
+    deps:
+      - src/models/evaluate_mlp.py
+      - src/models/baseline.py
+      - data/processed/test.csv
+      - artifacts/scaler.pkl
+      - models/mlp_model.pt
+    outs:
+      - artifacts/classification_report_mlp.txt

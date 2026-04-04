@@ -1,7 +1,7 @@
 schema: '2.0'
 stages:
   feature_engineering:
-    cmd: python src/features/feature_engineering.py
+    cmd: python -m src.features.feature_engineering
     deps:
     - path: data/raw/lending_data.csv
       hash: md5
@@ -12,6 +12,10 @@ stages:
       md5: 95a83f160a40dcf2225cb4a54f2ad315
       size: 5889
     outs:
+    - path: artifacts/scaler.pkl
+      hash: md5
+      md5: fbf335acdabcf4ba59dde343978e40b9
+      size: 999
     - path: data/processed/test.csv
       hash: md5
       md5: d16f7debd54fb725a04d0aa5b9be14a7
@@ -20,3 +24,51 @@ stages:
       hash: md5
       md5: de0d833d716bdbd7b104dd360c87ac78
       size: 5039700
+  train:
+    cmd: python -m src.models.train
+    deps:
+    - path: data/processed/train.csv
+      hash: md5
+      md5: de0d833d716bdbd7b104dd360c87ac78
+      size: 5039700
+    - path: src/models/baseline.py
+      hash: md5
+      md5: 8abe369ae2d1abda911fbffec8a57ab6
+      size: 1873
+    - path: src/models/train.py
+      hash: md5
+      md5: 64958289e4f48687b546d29220e9bd41
+      size: 4490
+    outs:
+    - path: models/mlp_model.pt
+      hash: md5
+      md5: 130ff7afe88928121b0c8aa825141c29
+      size: 12845
+  evaluate_mlp:
+    cmd: python -m src.models.evaluate_mlp
+    deps:
+    - path: artifacts/scaler.pkl
+      hash: md5
+      md5: fbf335acdabcf4ba59dde343978e40b9
+      size: 999
+    - path: data/processed/test.csv
+      hash: md5
+      md5: d16f7debd54fb725a04d0aa5b9be14a7
+      size: 475162
+    - path: models/mlp_model.pt
+      hash: md5
+      md5: 130ff7afe88928121b0c8aa825141c29
+      size: 12845
+    - path: src/models/baseline.py
+      hash: md5
+      md5: 8abe369ae2d1abda911fbffec8a57ab6
+      size: 1873
+    - path: src/models/evaluate_mlp.py
+      hash: md5
+      md5: 6aad8794ac9e160a6be0b8b171a0e01a
+      size: 4190
+    outs:
+    - path: artifacts/classification_report_mlp.txt
+      hash: md5
+      md5: 6bd325e3f2d86ec97ac81c422d377afb
+      size: 334

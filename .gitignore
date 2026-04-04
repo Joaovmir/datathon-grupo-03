@@ -37,6 +37,10 @@ htmlcov/
 .dvc/cache/
 .dvc/tmp/
 
+# Artefatos e modelos gerados (gerenciados pelo DVC)
+/artifacts/
+/models/
+
 # Variáveis de ambiente
 .env
 
