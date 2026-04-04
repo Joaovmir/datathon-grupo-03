@@ -170,6 +170,31 @@ http://localhost:8000
 
 ---
 
+## 🐳 Docker
+
+### Build da imagem
+
+> Requer que `dvc repro` tenha sido executado antes (artefatos precisam existir localmente).
+
+```bash
+docker build -f src/serving/Dockerfile -t credit-risk-api .
+```
+
+### Rodar o container
+
+```bash
+docker run -p 8000:8000 credit-risk-api
+```
+
+API disponível em:
+
+```
+http://localhost:8000
+http://localhost:8000/docs
+```
+
+---
+
 ## 🔁 Pipeline de dados
 
 Executar pipeline com DVC:
