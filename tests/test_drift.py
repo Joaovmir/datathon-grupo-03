@@ -7,7 +7,6 @@ import pytest
 
 from src.monitoring import drift
 
-
 # ------------------------
 # Fixtures
 # ------------------------
@@ -91,9 +90,7 @@ def test_compute_drift_report_warning(reference_data):
     current = reference_data.copy()
     current["feature_1"] += 0.5  # leve drift
 
-    result = drift.compute_drift_report(
-        reference_data, current, ["feature_1"]
-    )
+    result = drift.compute_drift_report(reference_data, current, ["feature_1"])
 
     assert result["feature_1"]["status"] in {"WARNING", "RETRAIN"}
 
@@ -110,9 +107,7 @@ def test_compute_drift_report_retrain(reference_data, current_data_drifted):
 def test_compute_drift_report_missing_column(caplog, reference_data):
     caplog.set_level(logging.WARNING)
 
-    result = drift.compute_drift_report(
-        reference_data, reference_data, ["missing_col"]
-    )
+    result = drift.compute_drift_report(reference_data, reference_data, ["missing_col"])
 
     assert "missing_col" not in result
     assert "não encontrada" in caplog.text
@@ -154,8 +149,11 @@ def test_compute_drift_report_logs_to_mlflow(monkeypatch, reference_data):
     calls = {"metrics": []}
 
     class DummyRun:
-        def __enter__(self): return self
-        def __exit__(self, *args): pass
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            pass
 
     def fake_start_run(*args, **kwargs):
         return DummyRun()
@@ -165,13 +163,6 @@ def test_compute_drift_report_logs_to_mlflow(monkeypatch, reference_data):
 
     monkeypatch.setattr(drift.mlflow, "start_run", fake_start_run)
     monkeypatch.setattr(drift.mlflow, "log_metric", fake_log_metric)
-
-    result = drift.compute_drift_report(
-        reference_data,
-        reference_data,
-        ["feature_1"],
-        run_id="123",
-    )
 
     assert any(k == "drift_share" for k, _ in calls["metrics"])
     assert any(k == "max_psi" for k, _ in calls["metrics"])
@@ -185,8 +176,12 @@ def test_compute_drift_report_logs_to_mlflow(monkeypatch, reference_data):
 
 def test_run_evidently_drift_success(monkeypatch, tmp_path, reference_data):
     class FakeReport:
-        def run(self, **kwargs): pass
-        def save_html(self, path): Path(path).write_text("ok")
+        def run(self, **kwargs):
+            pass
+
+        def save_html(self, path):
+            Path(path).write_text("ok")
+
         def as_dict(self):
             return {"metrics": [{"result": {"share_of_drifted_columns": 0.1}}]}
 

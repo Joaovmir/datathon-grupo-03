@@ -1,10 +1,8 @@
 import logging
-import time
 
 import pytest
 
 from src.monitoring import metrics
-
 
 # ------------------------
 # Fixtures
@@ -28,9 +26,7 @@ def reset_metrics():
 def test_record_prediction_increments_counter():
     metrics.record_prediction("LOW", 0, 0.2)
 
-    sample = metrics.PREDICTIONS_TOTAL.labels(
-        risk_label="LOW", prediction="0"
-    )
+    sample = metrics.PREDICTIONS_TOTAL.labels(risk_label="LOW", prediction="0")
 
     assert sample._value.get() == 1
 
