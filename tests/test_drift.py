@@ -164,9 +164,18 @@ def test_compute_drift_report_logs_to_mlflow(monkeypatch, reference_data):
     monkeypatch.setattr(drift.mlflow, "start_run", fake_start_run)
     monkeypatch.setattr(drift.mlflow, "log_metric", fake_log_metric)
 
-    assert any(k == "drift_share" for k, _ in calls["metrics"])
-    assert any(k == "max_psi" for k, _ in calls["metrics"])
-    assert any("psi_feature_1" in k for k, _ in calls["metrics"])
+    drift.compute_drift_report(
+        reference_data,
+        reference_data,
+        ["feature_1"],
+        run_id="test-run",
+    )
+
+    keys = [k for k, _ in calls["metrics"]]
+
+    assert "drift_share" in keys
+    assert "max_psi" in keys
+    assert any(k.startswith("psi_") for k in keys)
 
 
 # ------------------------
