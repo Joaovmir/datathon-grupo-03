@@ -34,12 +34,16 @@ def load_artifacts() -> tuple[MLPClassifier, object]:
     return model, scaler
 
 
-def predict(data: pd.DataFrame, model: MLPClassifier, scaler: object) -> list[int]:
+def predict(
+    data: pd.DataFrame,
+    model: MLPClassifier,
+    scaler: object,
+) -> tuple[list[int], list[float]]:
     """
     Run inference on raw input data.
 
-    Applies feature selection, scaling and returns binary predictions.
-    Designed to be called per request in an API or per batch in a job.
+    Applies feature selection, scaling and returns binary predictions
+    alongside the corresponding default probabilities.
 
     Args:
         data (pd.DataFrame): Raw input features (unscaled, may contain extra columns).
@@ -47,7 +51,9 @@ def predict(data: pd.DataFrame, model: MLPClassifier, scaler: object) -> list[in
         scaler: Fitted StandardScaler.
 
     Returns:
-        list[int]: Binary predictions (0 = low risk, 1 = high risk).
+        tuple:
+            - list[int]: Binary predictions (0 = low risk, 1 = high risk).
+            - list[float]: Default probabilities in [0, 1] for each row.
     """
     data = select_features(data.assign(loan_status=0)).drop(columns=["loan_status"])
     X_scaled = scaler.transform(data)
@@ -55,6 +61,7 @@ def predict(data: pd.DataFrame, model: MLPClassifier, scaler: object) -> list[in
 
     with torch.no_grad():
         logits = model(X_tensor)
-        predictions = (torch.sigmoid(logits) >= 0.5).numpy().astype(int)
+        probs = torch.sigmoid(logits).numpy()
+        predictions = (probs >= 0.5).astype(int)
 
-    return predictions.tolist()
+    return predictions.tolist(), probs.tolist()

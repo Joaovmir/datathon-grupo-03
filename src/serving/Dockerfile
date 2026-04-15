@@ -8,8 +8,8 @@ WORKDIR /app
 # Copy dependency files
 COPY pyproject.toml uv.lock ./
 
-# Install only what's needed for serving (sem dev, eda, monitoring, data, experiment)
-RUN uv sync --no-dev --group model --group serving
+# Install only what's needed for serving (sem dev, eda, data, experiment)
+RUN uv sync --no-dev --group model --group serving --group monitoring
 
 # Copy source code
 COPY src/ ./src/
@@ -20,4 +20,4 @@ COPY models/ ./models/
 
 EXPOSE 8000
 
-CMD ["uv", "run", "uvicorn", "src.serving.app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uv", "run", "uvicorn", "src.serving.app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

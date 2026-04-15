@@ -856,6 +856,7 @@ model = [
 ]
 monitoring = [
     { name = "evidently" },
+    { name = "mlflow" },
     { name = "prometheus-client" },
 ]
 serving = [
@@ -888,6 +889,7 @@ model = [
 ]
 monitoring = [
     { name = "evidently", specifier = ">=0.7.21" },
+    { name = "mlflow", specifier = ">=3.10.1" },
     { name = "prometheus-client", specifier = ">=0.24.1" },
 ]
 serving = [

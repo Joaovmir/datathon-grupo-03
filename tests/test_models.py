@@ -110,16 +110,19 @@ class TestTrainMlpModel:
 
 class TestInferencePredict:
     def test_returns_list(self, trained_model, fitted_scaler, sample_X):
-        result = inference_predict(sample_X, trained_model, fitted_scaler)
-        assert isinstance(result, list)
+        preds, probs = inference_predict(sample_X, trained_model, fitted_scaler)
+
+        assert isinstance(preds, list)
+        assert isinstance(probs, list)
 
     def test_returns_binary_values(self, trained_model, fitted_scaler, sample_X):
-        result = inference_predict(sample_X, trained_model, fitted_scaler)
-        assert all(v in (0, 1) for v in result)
+        preds, probs = inference_predict(sample_X, trained_model, fitted_scaler)
+        assert all(v in (0, 1) for v in preds)
 
     def test_output_length_matches_input(self, trained_model, fitted_scaler, sample_X):
-        result = inference_predict(sample_X, trained_model, fitted_scaler)
-        assert len(result) == len(sample_X)
+        preds, probs = inference_predict(sample_X, trained_model, fitted_scaler)
+        assert len(preds) == len(sample_X)
+        assert len(probs) == len(sample_X)
 
 
 # ---------------------------------------------------------------------------

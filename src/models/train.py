@@ -12,8 +12,10 @@ from torch.utils.data import DataLoader, TensorDataset
 
 from src.features.feature_engineering import load_data, split_features_target
 from src.models.baseline import MLPClassifier, build_mlp, mlp_params
+from src.monitoring.drift import compute_drift_report
 
 TRAIN_PATH = Path("data/processed/train.csv")
+REFERENCE_PATH = Path("artifacts/reference_data.csv")
 MODEL_PATH = Path("models/mlp_model.pt")
 
 # Tags obrigatórias MLflow
@@ -30,6 +32,17 @@ required_tags = {
 }
 
 logger = logging.getLogger(__name__)
+
+
+def save_reference_data(X: pd.DataFrame) -> None:
+    """Persiste os dados de treino como referência para detecção de drift.
+
+    Args:
+        X: DataFrame com as features de treino (sem target).
+    """
+    REFERENCE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    X.to_csv(REFERENCE_PATH, index=False)
+    logger.info("Dados de referência salvos em %s (%d linhas).", REFERENCE_PATH, len(X))
 
 
 def train_mlp_model(
@@ -99,6 +112,7 @@ def run_mlp_mlflow() -> None:
     - Load data
     - Train model
     - Log params and model in MLflow
+    - Save reference data and run baseline drift report (train vs train)
     """
     X_train, y_train = split_features_target(load_data(TRAIN_PATH))
 
@@ -121,7 +135,7 @@ def run_mlp_mlflow() -> None:
     )
 
     mlflow.set_experiment("credit-risk")
-    with mlflow.start_run(run_name="mlp"):
+    with mlflow.start_run(run_name="mlp") as run:
         mlflow.set_tags(tags)
 
         mlflow.log_param("input_dim", mlp_params["input_dim"])
@@ -138,7 +152,16 @@ def run_mlp_mlflow() -> None:
 
         MODEL_PATH.parent.mkdir(exist_ok=True)
         torch.save(model.state_dict(), MODEL_PATH)
-        mlflow.pytorch.log_model(model, name="mlp_model")
+        mlflow.pytorch.log_model(model, name="mlp_model", export_model=True)
+
+        save_reference_data(X_train)
+        feature_cols = X_train.columns.tolist()
+        compute_drift_report(
+            reference_df=X_train,
+            current_df=X_train,
+            feature_cols=feature_cols,
+            run_id=run.info.run_id,
+        )
 
         logger.info("Modelo %s treinado e salvo.", tags["model_name"])
 
