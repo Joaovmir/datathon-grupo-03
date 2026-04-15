@@ -1,6 +1,6 @@
 [project]
 name = "datathon-grupo-03"
-version = "0.2.0"
+version = "0.3.0"
 description = "Projeto de risco de crédito"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -29,6 +29,7 @@ serving = [
 monitoring = [
     "evidently>=0.7.21",
     "prometheus-client>=0.24.1",
+    "mlflow>=3.10.1"
 ]
 
 data = [
