@@ -153,22 +153,21 @@ def run_mlp_mlflow() -> None:
         mlflow.log_param("n_samples_train", X_train.shape[0])
 
         model = train_mlp_model(X_train, y_train, mlp_params)
-        
+
         input_example = X_train.iloc[:5].values.astype("float32")
 
         MODEL_PATH.parent.mkdir(exist_ok=True)
         torch.save(model.state_dict(), MODEL_PATH)
-        mlflow.pytorch.log_model(model, 
-                                 name="mlp_model", 
-                                 export_model=True, 
-                                 input_example=input_example)
+        mlflow.pytorch.log_model(
+            model, name="mlp_model", export_model=True, input_example=input_example
+        )
 
         save_reference_data(X_train)
         monitoring_config = load_config("configs/monitoring_config.yaml")
 
         if monitoring_config["monitoring"]["drift"]["columns"]["use_all_features"]:
             feature_cols = X_train.columns.tolist()
-        
+
         compute_drift_report(
             reference_df=X_train,
             current_df=X_train,

@@ -1,6 +1,7 @@
+from pathlib import Path
+
 import torch
 import torch.nn as nn
-from pathlib import Path
 
 from src.utils.config import load_config
 
