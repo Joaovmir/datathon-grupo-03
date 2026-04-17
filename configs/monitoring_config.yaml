@@ -1,0 +1,16 @@
+monitoring:
+  drift:
+    enabled: true
+    tool: evidently
+
+    reference_path: artifacts/reference_data.csv
+
+    columns:
+      use_all_features: true
+
+  mlflow:
+    log_drift: true
+    artifact_name: drift_report.html
+
+  alerts:
+    drift_threshold: 0.1

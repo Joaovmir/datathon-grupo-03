@@ -13,10 +13,14 @@ from torch.utils.data import DataLoader, TensorDataset
 from src.features.feature_engineering import load_data, split_features_target
 from src.models.baseline import MLPClassifier, build_mlp, mlp_params
 from src.monitoring.drift import compute_drift_report
+from src.utils.config import load_config
 
-TRAIN_PATH = Path("data/processed/train.csv")
-REFERENCE_PATH = Path("artifacts/reference_data.csv")
-MODEL_PATH = Path("models/mlp_model.pt")
+CONFIG_PATH = Path("configs/model_config.yaml")
+config = load_config(CONFIG_PATH)
+
+TRAIN_PATH = Path(config["paths"]["train_data"])
+MODEL_PATH = Path(config["paths"]["model_path"])
+REFERENCE_PATH = Path(config["paths"]["reference_data"])
 
 # Tags obrigatórias MLflow
 required_tags = {
@@ -149,13 +153,22 @@ def run_mlp_mlflow() -> None:
         mlflow.log_param("n_samples_train", X_train.shape[0])
 
         model = train_mlp_model(X_train, y_train, mlp_params)
+        
+        input_example = X_train.iloc[:5].values.astype("float32")
 
         MODEL_PATH.parent.mkdir(exist_ok=True)
         torch.save(model.state_dict(), MODEL_PATH)
-        mlflow.pytorch.log_model(model, name="mlp_model", export_model=True)
+        mlflow.pytorch.log_model(model, 
+                                 name="mlp_model", 
+                                 export_model=True, 
+                                 input_example=input_example)
 
         save_reference_data(X_train)
-        feature_cols = X_train.columns.tolist()
+        monitoring_config = load_config("configs/monitoring_config.yaml")
+
+        if monitoring_config["monitoring"]["drift"]["columns"]["use_all_features"]:
+            feature_cols = X_train.columns.tolist()
+        
         compute_drift_report(
             reference_df=X_train,
             current_df=X_train,

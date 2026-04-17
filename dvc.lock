@@ -33,12 +33,12 @@ stages:
       size: 5039700
     - path: src/models/baseline.py
       hash: md5
-      md5: 8abe369ae2d1abda911fbffec8a57ab6
-      size: 1873
+      md5: 95353c2078675cf094cfa445e67a7e3d
+      size: 1886
     - path: src/models/train.py
       hash: md5
-      md5: 28c3211bd0e98ea41790c994e1d98523
-      size: 5371
+      md5: 5fa0c116e34db7b417a5b79b922b01b5
+      size: 5919
     outs:
     - path: models/mlp_model.pt
       hash: md5
@@ -61,8 +61,8 @@ stages:
       size: 12845
     - path: src/models/baseline.py
       hash: md5
-      md5: 8abe369ae2d1abda911fbffec8a57ab6
-      size: 1873
+      md5: 95353c2078675cf094cfa445e67a7e3d
+      size: 1886
     - path: src/models/evaluate_mlp.py
       hash: md5
       md5: 6aad8794ac9e160a6be0b8b171a0e01a
