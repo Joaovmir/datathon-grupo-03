@@ -1,19 +1,18 @@
+from pathlib import Path
+
 import torch
 import torch.nn as nn
+
+from src.utils.config import load_config
+
+CONFIG_PATH = Path("configs/model_config.yaml")
+config = load_config(CONFIG_PATH)
 
 # ---------------------------------------------------------------------------
 # Parâmetros
 # ---------------------------------------------------------------------------
 
-mlp_params = {
-    "input_dim": 4,
-    "hidden_dims": [64, 32],
-    "dropout": 0.3,
-    "lr": 1e-3,
-    "epochs": 50,
-    "batch_size": 256,
-    "random_state": 42,
-}
+mlp_params = config["training"]
 
 # ---------------------------------------------------------------------------
 # Modelos
