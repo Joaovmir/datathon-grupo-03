@@ -1,0 +1,121 @@
+{
+  "title": "Credit Risk Monitoring",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "API Requests per Endpoint",
+      "targets": [
+        {
+          "expr": "sum by (endpoint) (rate(credit_api_requests_total[1m]))",
+          "legendFormat": "{{endpoint}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Latency p95",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(credit_api_request_duration_seconds_bucket[1m])) by (le))",
+          "legendFormat": "p95 latency"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Total Predictions",
+      "targets": [
+        {
+          "expr": "sum(credit_model_predictions_total)"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Prediction Probability Distribution",
+      "targets": [
+        {
+          "expr": "rate(credit_model_prediction_probability_bucket[1m])",
+          "legendFormat": "{{le}}"
+        }
+      ]
+    },
+    {
+      "type": "gauge",
+      "title": "Approval Rate",
+      "targets": [
+        {
+          "expr": "credit_business_approval_rate"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 1
+        }
+      }
+    },
+    {
+      "type": "gauge",
+      "title": "High Risk Rate",
+      "targets": [
+        {
+          "expr": "credit_business_high_risk_rate"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 1
+        }
+      }
+    },
+    {
+      "type": "gauge",
+      "title": "Avg Default Probability",
+      "targets": [
+        {
+          "expr": "credit_business_avg_default_probability"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 1
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Drift PSI by Feature",
+      "targets": [
+        {
+          "expr": "credit_drift_psi",
+          "legendFormat": "{{feature}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Drift Status",
+      "targets": [
+        {
+          "expr": "credit_drift_status",
+          "legendFormat": "{{feature}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Security Events",
+      "targets": [
+        {
+          "expr": "rate(credit_security_events_total[1m])",
+          "legendFormat": "{{event_type}}"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 36,
+  "version": 1
+}
