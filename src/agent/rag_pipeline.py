@@ -8,7 +8,9 @@ POLICIES_PATH = Path("data/policies/credit_policies.txt")
 CHROMA_DIR = Path("artifacts/chroma_db")
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
-_embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
+
+def _get_embeddings() -> HuggingFaceEmbeddings:
+    return HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
 
 
 def build_index() -> Chroma:
@@ -32,7 +34,7 @@ def build_index() -> Chroma:
 
     vectorstore = Chroma.from_documents(
         documents=docs,
-        embedding=_embeddings,
+        embedding=_get_embeddings(),
         persist_directory=str(CHROMA_DIR),
     )
     return vectorstore
@@ -52,7 +54,7 @@ def load_index() -> Chroma:
 
     return Chroma(
         persist_directory=str(CHROMA_DIR),
-        embedding_function=_embeddings,
+        embedding_function=_get_embeddings(),
     )
 
 

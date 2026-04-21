@@ -29,6 +29,9 @@ def client(monkeypatch, tmp_path):
 
     monkeypatch.setattr(app, "load_artifacts", fake_load_artifacts)
     monkeypatch.setattr(app, "predict", fake_predict)
+    monkeypatch.setattr(app, "load_index", lambda: None)
+    monkeypatch.setattr(app, "initialize_tools", lambda *args: None)
+    monkeypatch.setattr(app, "build_agent", lambda: None)
 
     app.recent_predictions.clear()
 
