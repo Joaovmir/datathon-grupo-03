@@ -5,7 +5,7 @@ installdep:
 	uv sync
 # Instalar dependências e grupos
 install:
-	uv sync --group eda --group model --group serving --group monitoring --group data --group experiment
+	uv sync --group eda --group model --group serving --group monitoring --group data --group experiment --group agent
 
 # Atualizar lockfile
 lock:
