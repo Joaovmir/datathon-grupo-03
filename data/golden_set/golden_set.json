@@ -1,0 +1,282 @@
+[
+  {
+    "id": "gs_001",
+    "input": {
+      "borrower_income": 84400,
+      "debt_to_income": 0.6445,
+      "num_of_accounts": 12,
+      "derogatory_marks": 2
+    },
+    "expected_output": {
+      "prediction": 1,
+      "label": "loan denied",
+      "message": "Olá! Após análise do seu perfil, não foi possível aprovar o crédito solicitado neste momento. Os principais fatores que influenciaram essa decisão foram o elevado comprometimento financeiro em relação à renda e o número de contas ativas simultaneamente. Reduzir o volume de compromissos financeiros mensais e consolidar contas que não estão sendo utilizadas pode melhorar seu perfil para uma futura análise. Você pode solicitar uma nova avaliação a qualquer momento."
+    }
+  },
+  {
+    "id": "gs_002",
+    "input": {
+      "borrower_income": 84500,
+      "debt_to_income": 0.6449,
+      "num_of_accounts": 12,
+      "derogatory_marks": 2
+    },
+    "expected_output": {
+      "prediction": 1,
+      "label": "loan denied",
+      "message": "Olá! Após análise do seu perfil, não foi possível aprovar o crédito solicitado neste momento. Os principais fatores foram a relação entre dívidas e renda acima do recomendado e a presença de registros negativos no histórico de crédito. Recomendamos trabalhar na regularização das pendências e na redução do comprometimento financeiro mensal antes de uma nova solicitação. Estamos à disposição para qualquer dúvida."
+    }
+  },
+  {
+    "id": "gs_003",
+    "input": {
+      "borrower_income": 88000,
+      "debt_to_income": 0.6590,
+      "num_of_accounts": 13,
+      "derogatory_marks": 2
+    },
+    "expected_output": {
+      "prediction": 1,
+      "label": "loan denied",
+      "message": "Olá! Após análise do seu perfil, não foi possível aprovar o crédito solicitado neste momento. Os fatores que mais influenciaram essa decisão foram o alto comprometimento financeiro em relação à renda e a existência de registros negativos no histórico de crédito. Recomendamos priorizar a regularização das pendências e reduzir o número de compromissos financeiros ativos. Melhorias nesses fatores têm impacto direto em análises futuras."
+    }
+  },
+  {
+    "id": "gs_004",
+    "input": {
+      "borrower_income": 40800,
+      "debt_to_income": 0.2647,
+      "num_of_accounts": 2,
+      "derogatory_marks": 0
+    },
+    "expected_output": {
+      "prediction": 0,
+      "label": "loan approved",
+      "message": "Olá! Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil demonstrou boa capacidade de pagamento, com destaque para a relação equilibrada entre dívidas e renda e a ausência de registros negativos no histórico de crédito. Em breve você receberá os detalhes do contrato."
+    }
+  },
+  {
+    "id": "gs_005",
+    "input": {
+      "borrower_income": 47300,
+      "debt_to_income": 0.3657,
+      "num_of_accounts": 3,
+      "derogatory_marks": 0
+    },
+    "expected_output": {
+      "prediction": 0,
+      "label": "loan approved",
+      "message": "Olá! Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil demonstrou boa gestão financeira, com destaque para a ausência de registros negativos e um índice de comprometimento de renda dentro de parâmetros saudáveis. Em breve você receberá os detalhes do contrato."
+    }
+  },
+  {
+    "id": "gs_006",
+    "input": {
+      "borrower_income": 39700,
+      "debt_to_income": 0.2443,
+      "num_of_accounts": 2,
+      "derogatory_marks": 0
+    },
+    "expected_output": {
+      "prediction": 0,
+      "label": "loan approved",
+      "message": "Olá! Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil apresentou baixo comprometimento financeiro em relação à renda e histórico de crédito sem registros negativos, o que demonstra boa saúde financeira. Em breve você receberá os detalhes do contrato."
+    }
+  },
+  {
+    "id": "gs_007",
+    "input": {
+      "borrower_income": 49000,
+      "debt_to_income": 0.3877,
+      "num_of_accounts": 4,
+      "derogatory_marks": 0
+    },
+    "expected_output": {
+      "prediction": 0,
+      "label": "loan approved",
+      "message": "Olá! Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil demonstrou boa capacidade de pagamento, com um nível de comprometimento financeiro adequado e ausência de registros negativos. Em breve você receberá os detalhes do contrato."
+    }
+  },
+  {
+    "id": "gs_008",
+    "input": {
+      "borrower_income": 99000,
+      "debt_to_income": 0.6969,
+      "num_of_accounts": 15,
+      "derogatory_marks": 3
+    },
+    "expected_output": {
+      "prediction": 1,
+      "label": "loan denied",
+      "message": "Olá! Após análise do seu perfil, não foi possível aprovar o crédito solicitado neste momento. Os principais fatores foram o comprometimento financeiro muito elevado em relação à renda, o alto número de contas ativas e a presença de registros negativos no histórico de crédito. Regularizar as pendências existentes e reduzir o número de compromissos financeiros simultâneos são os passos mais importantes para melhorar seu perfil. Você pode solicitar uma nova avaliação a qualquer momento."
+    }
+  },
+  {
+    "id": "gs_009",
+    "input": {
+      "borrower_income": 37100,
+      "debt_to_income": 0.1913,
+      "num_of_accounts": 1,
+      "derogatory_marks": 0
+    },
+    "expected_output": {
+      "prediction": 0,
+      "label": "loan approved",
+      "message": "Olá! Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil apresentou um dos melhores indicadores de saúde financeira: baixíssimo comprometimento de renda, apenas uma conta ativa e nenhum registro negativo no histórico de crédito. Em breve você receberá os detalhes do contrato."
+    }
+  },
+  {
+    "id": "gs_010",
+    "input": {
+      "borrower_income": 92500,
+      "debt_to_income": 0.6756,
+      "num_of_accounts": 14,
+      "derogatory_marks": 3
+    },
+    "expected_output": {
+      "prediction": 1,
+      "label": "loan denied",
+      "message": "Olá! Após análise do seu perfil, não foi possível aprovar o crédito solicitado neste momento. Os fatores que mais pesaram na decisão foram a relação entre dívidas e renda acima do recomendado, o elevado número de contas ativas e a presença de registros negativos no histórico de crédito. Recomendamos priorizar a regularização das pendências antes de qualquer nova solicitação. Estamos à disposição para qualquer dúvida."
+    }
+  },
+  {
+    "id": "gs_011",
+    "input": {
+      "borrower_income": 39800,
+      "debt_to_income": 0.2462,
+      "num_of_accounts": 2,
+      "derogatory_marks": 0
+    },
+    "expected_output": {
+      "prediction": 0,
+      "label": "loan approved",
+      "message": "Olá! Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil demonstrou boa capacidade de pagamento, com destaque para o baixo comprometimento de renda, número saudável de contas ativas e ausência de registros negativos. Em breve você receberá os detalhes do contrato."
+    }
+  },
+  {
+    "id": "gs_012",
+    "input": {
+      "borrower_income": 55000,
+      "debt_to_income": 0.5818,
+      "num_of_accounts": 8,
+      "derogatory_marks": 1
+    },
+    "expected_output": {
+      "prediction": 1,
+      "label": "loan denied",
+      "message": "Olá! Após análise do seu perfil, não foi possível aprovar o crédito solicitado neste momento. O principal fator que influenciou essa decisão foi a relação entre dívidas e renda acima do recomendado, combinada com a presença de um registro negativo no histórico de crédito. Reduzir o comprometimento financeiro mensal e regularizar a pendência existente são os passos mais eficazes para melhorar seu perfil. Você pode solicitar uma nova avaliação a qualquer momento."
+    }
+  },
+  {
+    "id": "gs_013",
+    "input": {
+      "borrower_income": 62000,
+      "debt_to_income": 0.4032,
+      "num_of_accounts": 5,
+      "derogatory_marks": 0
+    },
+    "expected_output": {
+      "prediction": 0,
+      "label": "loan approved",
+      "message": "Olá! Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil demonstrou boa gestão financeira, com comprometimento de renda em nível adequado, número de contas dentro do esperado e ausência de registros negativos. Em breve você receberá os detalhes do contrato."
+    }
+  },
+  {
+    "id": "gs_014",
+    "input": {
+      "borrower_income": 73000,
+      "debt_to_income": 0.6301,
+      "num_of_accounts": 10,
+      "derogatory_marks": 2
+    },
+    "expected_output": {
+      "prediction": 1,
+      "label": "loan denied",
+      "message": "Olá! Após análise do seu perfil, não foi possível aprovar o crédito solicitado neste momento. Os fatores que mais influenciaram essa decisão foram o elevado comprometimento financeiro em relação à renda e a presença de registros negativos no histórico de crédito. Trabalhar na redução das dívidas ativas e na regularização das pendências são os passos mais importantes antes de uma nova solicitação."
+    }
+  },
+  {
+    "id": "gs_015",
+    "input": {
+      "borrower_income": 44000,
+      "debt_to_income": 0.3181,
+      "num_of_accounts": 3,
+      "derogatory_marks": 0
+    },
+    "expected_output": {
+      "prediction": 0,
+      "label": "loan approved",
+      "message": "Olá! Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil apresentou comprometimento de renda equilibrado e histórico de crédito sem registros negativos, demonstrando boa saúde financeira. Em breve você receberá os detalhes do contrato."
+    }
+  },
+  {
+    "id": "gs_016",
+    "input": {
+      "borrower_income": 105000,
+      "debt_to_income": 0.7142,
+      "num_of_accounts": 16,
+      "derogatory_marks": 4
+    },
+    "expected_output": {
+      "prediction": 1,
+      "label": "loan denied",
+      "message": "Olá! Após análise do seu perfil, não foi possível aprovar o crédito solicitado neste momento. Os fatores que mais pesaram na decisão foram o comprometimento financeiro crítico em relação à renda, o elevado número de contas ativas simultaneamente e múltiplos registros negativos no histórico de crédito. Recomendamos priorizar a regularização das pendências existentes antes de qualquer nova solicitação. Você pode solicitar uma nova avaliação a qualquer momento."
+    }
+  },
+  {
+    "id": "gs_017",
+    "input": {
+      "borrower_income": 33000,
+      "debt_to_income": 0.1818,
+      "num_of_accounts": 1,
+      "derogatory_marks": 0
+    },
+    "expected_output": {
+      "prediction": 0,
+      "label": "loan approved",
+      "message": "Olá! Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil demonstrou excelente saúde financeira: comprometimento de renda muito baixo, mínimo de contas ativas e histórico de crédito sem nenhum registro negativo. Em breve você receberá os detalhes do contrato."
+    }
+  },
+  {
+    "id": "gs_018",
+    "input": {
+      "borrower_income": 68000,
+      "debt_to_income": 0.6029,
+      "num_of_accounts": 9,
+      "derogatory_marks": 1
+    },
+    "expected_output": {
+      "prediction": 1,
+      "label": "loan denied",
+      "message": "Olá! Após análise do seu perfil, não foi possível aprovar o crédito solicitado neste momento. O principal fator que influenciou essa decisão foi o comprometimento financeiro elevado em relação à renda. A presença de um registro negativo no histórico de crédito também contribuiu para o resultado. Reduzir o volume de compromissos financeiros mensais é o passo mais relevante para melhorar seu perfil em uma futura análise."
+    }
+  },
+  {
+    "id": "gs_019",
+    "input": {
+      "borrower_income": 52000,
+      "debt_to_income": 0.4230,
+      "num_of_accounts": 5,
+      "derogatory_marks": 0
+    },
+    "expected_output": {
+      "prediction": 0,
+      "label": "loan approved",
+      "message": "Olá! Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil demonstrou boa capacidade de pagamento, com comprometimento de renda em nível adequado e ausência de registros negativos no histórico de crédito. Em breve você receberá os detalhes do contrato."
+    }
+  },
+  {
+    "id": "gs_020",
+    "input": {
+      "borrower_income": 78000,
+      "debt_to_income": 0.6538,
+      "num_of_accounts": 11,
+      "derogatory_marks": 3
+    },
+    "expected_output": {
+      "prediction": 1,
+      "label": "loan denied",
+      "message": "Olá! Após análise do seu perfil, não foi possível aprovar o crédito solicitado neste momento. Os fatores que mais influenciaram essa decisão foram a relação entre dívidas e renda acima do recomendado, o número elevado de contas ativas e múltiplos registros negativos no histórico de crédito. Regularizar as pendências existentes e reduzir o comprometimento financeiro mensal são os passos mais importantes antes de uma nova solicitação. Você pode solicitar uma nova avaliação a qualquer momento."
+    }
+  }
+]
