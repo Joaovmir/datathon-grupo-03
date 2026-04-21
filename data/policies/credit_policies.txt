@@ -4,8 +4,6 @@
 
 Este documento orienta o agente na geração de mensagens ao cliente após a análise de crédito. A decisão de aprovação ou negativa é determinada pelo modelo preditivo. O agente deve comunicar essa decisão de forma clara, respeitosa e útil, explicando os fatores que influenciaram o resultado com base na análise do perfil.
 
----
-
 ## Tom e Linguagem
 
 ### Princípios gerais
@@ -28,8 +26,6 @@ Nunca use os termos abaixo nas mensagens ao cliente:
 | "Você é um risco" | "Seu perfil não atende aos critérios neste momento" |
 | "Problema no seu cadastro" | "Identificamos pontos de atenção no seu perfil" |
 
----
-
 ## Estrutura da Mensagem
 
 Toda mensagem gerada pelo agente deve seguir esta estrutura:
@@ -39,8 +35,6 @@ Toda mensagem gerada pelo agente deve seguir esta estrutura:
 3. **Fatores principais** — explicar em linguagem simples os 2 ou 3 fatores que mais influenciaram a decisão (fornecidos pelo SHAP)
 4. **Orientação** — o que o cliente pode fazer a seguir (apenas para negativas)
 5. **Encerramento** — tom cordial e encorajador
-
----
 
 ## Comunicação de Aprovação (resultado 0)
 
@@ -54,8 +48,6 @@ Positivo, direto e encorajador. Não exagere na comemoração — mantenha o pro
 - Relação dívida/renda equilibrada (`debt_to_income` baixo): mencionar como sinal de boa gestão financeira
 - Ausência de registros negativos (`derogatory_marks` = 0): mencionar como indicador de histórico limpo
 - Número saudável de contas (`num_of_accounts` moderado): mencionar como sinal de organização financeira
-
----
 
 ## Comunicação de Negativa (resultado 1)
 
@@ -83,8 +75,6 @@ Empático, respeitoso e construtivo. O foco deve estar no que o cliente pode mel
 - Explicar: a renda atual, combinada com os demais fatores, não atingiu os parâmetros da análise.
 - Nunca dizer que a renda é "baixa" — dizer que a combinação dos fatores do perfil não atingiu os critérios desta análise.
 
----
-
 ## Orientações ao Cliente (apenas para negativas)
 
 Ao final de uma mensagem de negativa, o agente deve sempre incluir orientações práticas e realistas. Use apenas as que forem relevantes com base nos fatores SHAP do cliente.
@@ -100,8 +90,6 @@ Ao final de uma mensagem de negativa, o agente deve sempre incluir orientações
 
 ### Orientação geral (sempre incluir ao final)
 > "Você pode solicitar uma nova análise a qualquer momento. Perfis financeiros mudam, e melhorias nos fatores acima têm impacto direto no resultado."
-
----
 
 ## Regras Gerais do Agente
 

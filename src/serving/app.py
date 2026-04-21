@@ -7,6 +7,9 @@ from fastapi import FastAPI, Response
 from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 from pydantic import BaseModel
 
+from src.agent.rag_pipeline import load_index
+from src.agent.react_agent import build_agent, run_agent
+from src.agent.tools import initialize_tools
 from src.features.feature_engineering import transform_features
 from src.models.inference import load_artifacts, predict
 from src.monitoring.drift import compute_drift_report, run_evidently_drift
@@ -38,9 +41,12 @@ artifacts: dict = {}
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Load model and scaler once at startup, release at shutdown."""
+    """Load model, scaler, vectorstore and agent once at startup."""
     artifacts["model"], artifacts["scaler"] = load_artifacts()
-    logger.info("Artefatos carregados com sucesso.")
+    artifacts["vectorstore"] = load_index()
+    initialize_tools(artifacts["model"], artifacts["scaler"], artifacts["vectorstore"])
+    artifacts["agent"] = build_agent()
+    logger.info("Artefatos e agente carregados com sucesso.")
     yield
     artifacts.clear()
 
@@ -63,6 +69,19 @@ class PredictionRequest(BaseModel):
 class PredictionResponse(BaseModel):
     prediction: int
     label: str
+
+
+class ExplainRequest(BaseModel):
+    borrower_income: float
+    debt_to_income: float
+    num_of_accounts: int
+    derogatory_marks: int
+
+
+class ExplainResponse(BaseModel):
+    prediction: int
+    label: str
+    message: str
 
 
 @app.get("/health")
@@ -125,6 +144,40 @@ def predict_endpoint(request: PredictionRequest) -> PredictionResponse:
     return PredictionResponse(
         prediction=prediction,
         label="high risk" if prediction == 1 else "low risk",
+    )
+
+
+@app.post("/explain", response_model=ExplainResponse)
+def explain_endpoint(request: ExplainRequest) -> ExplainResponse:
+    """
+    Recebe o perfil do solicitante, obtém a decisão do modelo MLP e retorna
+    uma mensagem de comunicação gerada pelo agente ReAct com RAG e SHAP.
+
+    O agente:
+    - Avalia o contexto financeiro do perfil
+    - Identifica os fatores que mais influenciaram a decisão (SHAP)
+    - Consulta as políticas de comunicação do banco
+    - Gera uma mensagem empática e personalizada para o cliente
+    """
+    data = pd.DataFrame([request.model_dump()])
+    predictions, probabilities = predict(data, artifacts["model"], artifacts["scaler"])
+    prediction: int = predictions[0]
+    probability: float = probabilities[0]
+
+    message = run_agent(
+        artifacts["agent"],
+        borrower_income=request.borrower_income,
+        debt_to_income=request.debt_to_income,
+        num_of_accounts=request.num_of_accounts,
+        derogatory_marks=request.derogatory_marks,
+        prediction=prediction,
+        probability=probability,
+    )
+
+    return ExplainResponse(
+        prediction=prediction,
+        label="high risk" if prediction == 1 else "low risk",
+        message=message,
     )
 
 

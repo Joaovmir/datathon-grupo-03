@@ -44,9 +44,11 @@ agent = [
     "langchain-community>=0.3",
     "langchain-text-splitters>=0.3",
     "langchain-huggingface>=0.1",
+    "langchain-groq>=0.3",
     "sentence-transformers>=3.0",
     "chromadb>=0.6",
     "groq>=0.9",
+    "python-dotenv>=1.0",
 ]
 
 experiment = [
