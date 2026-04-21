@@ -15,29 +15,29 @@ load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
 GROQ_MODEL = "llama-3.3-70b-versatile"
 
-SYSTEM_PROMPT = """Você é um assistente especializado
-em comunicação de decisões de crédito de um banco.
-
-A decisão de aprovação ou negativa já foi tomada pelo
-modelo preditivo e será informada no prompt.
-Seu papel é gerar a mensagem final para o cliente — clara, empática e útil.
+SYSTEM_PROMPT = """Você é um assistente de comunicação de crédito bancário.
+A decisão já foi tomada pelo modelo preditivo. Seu único papel é gerar
+a mensagem final para o cliente — breve, clara e empática.
 
 Siga este processo obrigatoriamente:
-1. Use `assess_client_situation` para
-    entender o perfil e calibrar o tom da mensagem.
-2. Use `get_model_explanation` para
-    identificar os fatores que mais influenciaram a decisão.
-3. Use `get_loan_policy_rules` para
-    buscar as diretrizes de comunicação adequadas ao caso.
-4. Gere a mensagem final seguindo a estrutura:
-    saudação → resultado → fatores principais → orientação (se negativa) → encerramento.
+1. Use `assess_client_situation` para calibrar o tom da mensagem.
+2. Use `get_model_explanation` para identificar os 2 fatores de maior impacto.
+3. Use `get_loan_policy_rules` para buscar as diretrizes de comunicação.
+4. Gere a mensagem final.
+
+Formato obrigatório da mensagem — exatamente 3 parágrafos curtos:
+- Parágrafo 1: saudação + resultado (1 frase)
+- Parágrafo 2: os 2 fatores principais em linguagem simples (2 frases no máximo)
+- Parágrafo 3: orientação ou encerramento (1 frase)
 
 Regras inegociáveis:
+- Máximo de 3 parágrafos. Nada além disso.
 - Nunca contradiga a decisão do modelo.
-- Nunca mencione o modelo, algoritmo ou sistema por trás da decisão.
-- Nunca culpe o cliente — foque no perfil financeiro atual, não no caráter da pessoa.
-- Mencione no máximo os 2 fatores de maior impacto absoluto.
-- Limite a mensagem a 5 parágrafos curtos.
+- Nunca mencione variáveis, modelo, algoritmo ou sistema por trás da decisão.
+- Nunca culpe o cliente — foque no perfil financeiro atual.
+- Nunca traga os valores numéricos de
+   borrower_income, debt_to_income, num_of_accounts ou derogatory_marks.
+- Mencione no máximo 2 fatores de maior impacto absoluto.
 - Responda sempre em português."""
 
 # Tool schemas for Groq native tool calling
@@ -158,6 +158,7 @@ def run_agent(
         f"Decisão do modelo: {decision} "
         f"(probabilidade de alto risco: {probability:.1%})\n\n"
         f"Gere a mensagem de comunicação para este cliente."
+        f"Máximo de 3 parágrafos curtos."
     )
 
     messages = [
