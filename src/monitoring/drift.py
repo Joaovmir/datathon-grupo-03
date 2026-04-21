@@ -17,7 +17,7 @@ def compute_psi(
     expected: np.ndarray,
     actual: np.ndarray,
     n_bins: int = 10,
-    epsilon: float = 1e-6,
+    epsilon: float = 1e-4,
 ) -> float:
     """Calcula o Population Stability Index (PSI) entre distribuições.
 
@@ -37,11 +37,18 @@ def compute_psi(
     breakpoints = np.percentile(expected, np.linspace(0, 100, n_bins + 1))
     breakpoints = np.unique(breakpoints)
 
+    breakpoints[0] = -np.inf
+    breakpoints[-1] = np.inf
+
+    n_bins_actual = len(breakpoints) - 1
+
     expected_counts = np.histogram(expected, bins=breakpoints)[0]
     actual_counts = np.histogram(actual, bins=breakpoints)[0]
 
-    expected_pct = (expected_counts + epsilon) / (len(expected) + epsilon * n_bins)
-    actual_pct = (actual_counts + epsilon) / (len(actual) + epsilon * n_bins)
+    expected_pct = (expected_counts + epsilon) / (
+        len(expected) + epsilon * n_bins_actual
+    )
+    actual_pct = (actual_counts + epsilon) / (len(actual) + epsilon * n_bins_actual)
 
     psi = np.sum((actual_pct - expected_pct) * np.log(actual_pct / expected_pct))
     return float(psi)
