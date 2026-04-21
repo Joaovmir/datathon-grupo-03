@@ -65,3 +65,71 @@ def predict(
         predictions = (probs >= 0.5).astype(int)
 
     return predictions.tolist(), probs.tolist()
+
+
+FEATURE_COLS = [
+    "borrower_income",
+    "debt_to_income",
+    "num_of_accounts",
+    "derogatory_marks",
+]
+
+
+def shap_explain(
+    data: pd.DataFrame,
+    model: MLPClassifier,
+    scaler,
+) -> list[dict]:
+    """
+    Compute SHAP values for a single applicant using KernelExplainer.
+
+    Wraps the model as a plain predict function so KernelExplainer
+    treats it as a black box — no PyTorch internals required.
+
+    The background (reference point) is a single row of zeros in the
+    scaled space, which corresponds to the mean of each feature after
+    StandardScaler normalisation.
+
+    Args:
+        data: DataFrame with one row containing the 4 raw feature columns.
+        model: Trained MLPClassifier in eval mode.
+        scaler: Fitted StandardScaler.
+
+    Returns:
+        List of dicts sorted by absolute SHAP value (most impactful first):
+        [{"feature": str, "shap_value": float, "direction": str}, ...]
+    """
+    import numpy as np
+    import shap
+
+    def predict_fn(X_scaled: np.ndarray) -> np.ndarray:
+        """Black-box wrapper: scaled features → high-risk probability."""
+        X_tensor = torch.tensor(X_scaled, dtype=torch.float32)
+        with torch.no_grad():
+            probs = torch.sigmoid(model(X_tensor)).numpy()
+        return probs.flatten()
+
+    # Scale input first;
+    # pass DataFrame to keep feature names and suppress sklearn warning
+    # Background = zeros in scaled space = mean of each feature after StandardScaler
+    X_input = scaler.transform(data[FEATURE_COLS])
+    background = np.zeros((1, len(FEATURE_COLS)))
+
+    explainer = shap.KernelExplainer(predict_fn, background)
+    # nsamples="auto" balances accuracy vs speed for 4 features
+    shap_values = explainer.shap_values(X_input, nsamples="auto")
+
+    values = np.array(shap_values).flatten()
+
+    result = [
+        {
+            "feature": feat,
+            "shap_value": round(float(val), 4),
+            "direction": "aumenta risco" if val > 0 else "reduz risco",
+        }
+        for feat, val in zip(FEATURE_COLS, values)
+    ]
+
+    # Most impactful factor first
+    result.sort(key=lambda x: abs(x["shap_value"]), reverse=True)
+    return result

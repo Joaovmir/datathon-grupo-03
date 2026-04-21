@@ -19,6 +19,9 @@ eda = [
 model = [
     "scikit-learn>=1.8.0",
     "torch>=2.11.0",
+    "shap>=0.46",
+    "numba>=0.60.0",
+    "llvmlite>=0.43.0",
 ]
 
 serving = [
@@ -34,6 +37,11 @@ monitoring = [
 
 data = [
     "dvc>=3.67.0",
+]
+
+agent = [
+    "langchain-core>=0.3",
+    "groq>=0.9",
 ]
 
 experiment = [
