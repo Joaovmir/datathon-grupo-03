@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 from fastapi import FastAPI, Response
-from prometheus_client import generate_latest
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 from pydantic import BaseModel
 
 from src.features.feature_engineering import transform_features
@@ -14,6 +14,12 @@ from src.monitoring.metrics import (
     record_prediction,
     track_latency,
     update_business_metrics,
+    APPROVAL_RATE,
+    HIGH_RISK_RATE,
+    AVERAGE_DEFAULT_PROBABILITY,
+    DRIFT_PSI,
+    SECURITY_EVENTS
+
 )
 
 logger = logging.getLogger(__name__)
@@ -43,7 +49,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Credit Risk API",
     description="Predição de risco de crédito com MLP PyTorch.",
-    version="0.1.0",
+    version="0.3.0",
     lifespan=lifespan,
 )
 
@@ -163,4 +169,27 @@ def drift_endpoint(use_evidently: bool = False) -> dict:
 @app.get("/metrics")
 def metrics():
     """Expõe métricas Prometheus."""
-    return Response(generate_latest(), media_type="text/plain")
+    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
+@app.get("/metrics/summary")
+def summary():
+    """Resumo de métricas do Prometheus."""
+    return {
+        "business": {
+            "approval_rate": APPROVAL_RATE._value.get(),
+            "high_risk_rate": HIGH_RISK_RATE._value.get(),
+            "avg_default_probability": AVERAGE_DEFAULT_PROBABILITY._value.get(),
+        },
+        "drift": {
+            "features": {
+                k[0]: v._value.get()
+                for k, v in DRIFT_PSI._metrics.items()
+            }
+        },
+        "security": {
+            "events": {
+                k[0]: v._value.get()
+                for k, v in SECURITY_EVENTS._metrics.items()
+            }
+        }
+    }
