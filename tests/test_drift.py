@@ -25,7 +25,6 @@ def reference_data():
 
 @pytest.fixture
 def current_data_stable(reference_data):
-    # mesma distribuição → sem drift
     return reference_data.copy()
 
 
@@ -34,7 +33,7 @@ def current_data_drifted():
     np.random.seed(42)
     return pd.DataFrame(
         {
-            "feature_1": np.random.normal(3, 1, 1000),  # shift forte
+            "feature_1": np.random.normal(3, 1, 1000),
             "feature_2": np.random.normal(10, 2, 1000),
         }
     )

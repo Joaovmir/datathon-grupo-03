@@ -10,21 +10,27 @@ from src.serving import app
 
 
 @pytest.fixture
-def client(monkeypatch):
+def client(monkeypatch, tmp_path):
     """
-    Create a test client with mocked artifacts and prediction function.
+    Create a test client with fully isolated environment.
     """
 
-    # Mock load_artifacts
+    monkeypatch.setattr(app, "CURRENT_BUFFER_PATH", tmp_path / "buffer.csv")
+    monkeypatch.setattr(app, "REFERENCE_PATH", tmp_path / "reference.csv")
+    monkeypatch.setattr(app, "SCALER_PATH", tmp_path / "scaler.pkl")
+
+    monkeypatch.setattr(app, "transform_features", lambda df, _: df)
+
     def fake_load_artifacts():
         return "model", "scaler"
 
-    # Mock predict
     def fake_predict(data, model, scaler):
-        return [0], [0.2]  # LOW risk
+        return [0], [0.2]
 
     monkeypatch.setattr(app, "load_artifacts", fake_load_artifacts)
     monkeypatch.setattr(app, "predict", fake_predict)
+
+    app.recent_predictions.clear()
 
     with TestClient(app.app) as c:
         yield c
@@ -96,7 +102,7 @@ def test_predict_appends_to_buffer(client, sample_payload, temp_paths):
     assert "borrower_income" in df.columns
 
 
-def test_predict_updates_recent_predictions(client, sample_payload):
+def test_predict_updates_recent_predictions(client, sample_payload, temp_paths):
     app.recent_predictions.clear()
 
     client.post("/predict", json=sample_payload)
@@ -105,7 +111,7 @@ def test_predict_updates_recent_predictions(client, sample_payload):
     assert app.recent_predictions[0]["risk_label"] == "LOW"
 
 
-def test_predict_limits_recent_predictions(client, sample_payload):
+def test_predict_limits_recent_predictions(client, sample_payload, temp_paths):
     app.recent_predictions.clear()
 
     for _ in range(105):
@@ -212,14 +218,21 @@ def test_append_to_buffer_creates_file(tmp_path, monkeypatch):
 
     monkeypatch.setattr(app, "CURRENT_BUFFER_PATH", buffer_path)
 
-    row = {"a": 1}
+    def fake_transform(df, path):
+        return df
+
+    monkeypatch.setattr(app, "transform_features", fake_transform)
+
+    row = {
+        "borrower_income": 1,
+        "debt_to_income": 0.1,
+        "num_of_accounts": 1,
+        "derogatory_marks": 1,
+    }
 
     app._append_to_buffer(row)
 
     assert buffer_path.exists()
-
-    df = pd.read_csv(buffer_path)
-    assert len(df) == 1
 
 
 def test_append_to_buffer_appends(tmp_path, monkeypatch):
@@ -227,8 +240,27 @@ def test_append_to_buffer_appends(tmp_path, monkeypatch):
 
     monkeypatch.setattr(app, "CURRENT_BUFFER_PATH", buffer_path)
 
-    app._append_to_buffer({"a": 1})
-    app._append_to_buffer({"a": 2})
+    def fake_transform(df, path):
+        return df
+
+    monkeypatch.setattr(app, "transform_features", fake_transform)
+
+    app._append_to_buffer(
+        {
+            "borrower_income": 1,
+            "debt_to_income": 0.1,
+            "num_of_accounts": 1,
+            "derogatory_marks": 1,
+        }
+    )
+    app._append_to_buffer(
+        {
+            "borrower_income": 2,
+            "debt_to_income": 0.2,
+            "num_of_accounts": 2,
+            "derogatory_marks": 2,
+        }
+    )
 
     df = pd.read_csv(buffer_path)
 

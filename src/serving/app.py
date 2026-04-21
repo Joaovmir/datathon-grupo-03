@@ -7,6 +7,7 @@ from fastapi import FastAPI, Response
 from prometheus_client import generate_latest
 from pydantic import BaseModel
 
+from src.features.feature_engineering import transform_features
 from src.models.inference import load_artifacts, predict
 from src.monitoring.drift import compute_drift_report, run_evidently_drift
 from src.monitoring.metrics import (
@@ -19,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 REFERENCE_PATH = Path("artifacts/reference_data.csv")
 CURRENT_BUFFER_PATH = Path("artifacts/current_buffer.csv")
+SCALER_PATH = Path("artifacts/scaler.pkl")
 FEATURE_COLS = [
     "borrower_income",
     "debt_to_income",
@@ -70,13 +72,14 @@ recent_predictions: list[dict] = []
 def _append_to_buffer(row: dict) -> None:
     """Acrescenta uma linha de produção ao buffer CSV para análise de drift."""
     df_new = pd.DataFrame([row])
+    df_transformed = transform_features(df_new, SCALER_PATH)
     CURRENT_BUFFER_PATH.parent.mkdir(parents=True, exist_ok=True)
 
     if CURRENT_BUFFER_PATH.exists():
         df_existing = pd.read_csv(CURRENT_BUFFER_PATH)
-        df_combined = pd.concat([df_existing, df_new], ignore_index=True)
+        df_combined = pd.concat([df_existing, df_transformed], ignore_index=True)
     else:
-        df_combined = df_new
+        df_combined = df_transformed
 
     df_combined.to_csv(CURRENT_BUFFER_PATH, index=False)
 
