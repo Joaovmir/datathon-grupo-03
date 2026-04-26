@@ -9,7 +9,7 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 
 # Install only what's needed for serving (sem dev, eda, data, experiment)
-RUN uv sync --no-dev --group model --group serving --group monitoring
+RUN uv sync --group eda --group model --group serving --group monitoring --group data --group experiment --group agent
 
 # Copy config files
 COPY configs/ ./configs/
