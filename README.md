@@ -267,14 +267,38 @@ make dvc         # rodar pipeline de dados
 
 ### Etapa 1 — Dados + Baseline
 
-* [ ] Estrutura do projeto
-* [ ] Setup de ambiente (uv)
-* [ ] CI/CD básico
-* [ ] Testes com cobertura
-* [ ] EDA
-* [ ] Baseline com MLflow
-* [ ] Pipeline com DVC
+- [x] EDA documentada com insights relevantes
+- [x] Baseline treinado e métricas reportadas no MLflow
+- [x] Pipeline versionado (DVC + Docker) e reprodutível
+- [x] Métricas de negócio mapeadas para métricas técnicas
+- [x] pyproject.toml com todas as dependências
 
+### Etapa 2 — LLM + Agente
+
+- [~] LLM servido via API com quantização aplicada
+- [x] Agente ReAct funcional com ≥ 3 tools relevantes ao domínio
+- [x] RAG retornando contexto relevante dos dados fornecidos
+- [x] CI/CD pipeline funcional (GitHub Actions)
+- [ ] Benchmark documentado com ≥ 3 configurações
+
+
+### Etapa 3 — Avaliação + Observabilidade
+
+- [x] Golden set com ≥ 20 pares relevantes ao domínio
+- [x] RAGAS: 4 métricas calculadas e reportadas
+- [x] LLM-as-judge com ≥ 3 critérios (incluindo critério de negócio)
+- [~] Telemetria e dashboard funcionando end-to-end
+- [x] Detecção de drift implementada e documentada
+
+
+### Etapa 4 — Segurança + Governança
+
+- [ ] OWASP mapping com ≥ 5 ameaças e mitigações
+- [ ] Guardrails de input e output funcionais
+- [ ] ≥ 5 cenários adversariais testados e documentados
+- [ ] Plano LGPD aplicado ao caso real
+- [~] Explicabilidade e fairness documentados
+- [ ] System Card completo
 ---
 
 ## 👥 Time

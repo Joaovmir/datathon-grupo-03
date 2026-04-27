@@ -1,0 +1,45 @@
+{
+  "summary": {
+    "answer_relevancy": 0.4324,
+    "faithfulness": 0.1,
+    "context_precision": 1.0,
+    "context_recall": 0.9
+  },
+  "per_sample": [
+    {
+      "id": "gs_001",
+      "answer_relevancy": 0.4599,
+      "faithfulness": 0.0,
+      "context_precision": 1.0,
+      "context_recall": 0.5
+    },
+    {
+      "id": "gs_002",
+      "answer_relevancy": 0.4596,
+      "faithfulness": 0.0,
+      "context_precision": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "id": "gs_003",
+      "answer_relevancy": 0.3724,
+      "faithfulness": 0.0,
+      "context_precision": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "id": "gs_004",
+      "answer_relevancy": 0.4303,
+      "faithfulness": 0.25,
+      "context_precision": 1.0,
+      "context_recall": 1.0
+    },
+    {
+      "id": "gs_005",
+      "answer_relevancy": 0.44,
+      "faithfulness": 0.25,
+      "context_precision": 1.0,
+      "context_recall": 1.0
+    }
+  ]
+}
