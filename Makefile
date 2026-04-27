@@ -47,6 +47,10 @@ mlflow:
 dvc:
 	dvc repro
 
+# Rodar avaliação RAGAS
+evaluate:
+	uv run python evaluation/ragas_eval.py
+
 # Limpeza
 clean:
 	rm -rf __pycache__ .pytest_cache .coverage mlruns

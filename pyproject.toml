@@ -55,6 +55,10 @@ experiment = [
     "mlflow>=3.10.1",
 ]
 
+evaluation = [
+    "ragas>=0.2",
+]
+
 dev = [
     "black>=26.3.1",
     "flake8>=7.3.0",

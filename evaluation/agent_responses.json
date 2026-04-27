@@ -1,0 +1,102 @@
+[
+  {
+    "id": "gs_001",
+    "input": {
+      "borrower_income": 84400,
+      "debt_to_income": 0.6445,
+      "num_of_accounts": 12,
+      "derogatory_marks": 2
+    },
+    "expected_output": {
+      "prediction": 1,
+      "label": "loan denied",
+      "message": "Olá! Após análise do seu perfil, não foi possível aprovar o crédito solicitado neste momento. Os principais fatores que influenciaram essa decisão foram o elevado comprometimento financeiro em relação à renda e o número de contas ativas simultaneamente. Reduzir o volume de compromissos financeiros mensais e consolidar contas que não estão sendo utilizadas pode melhorar seu perfil para uma futura análise. Você pode solicitar uma nova avaliação a qualquer momento."
+    },
+    "agent_response": "Prezado cliente, lamentamos informar que sua solicitação de crédito não foi aprovada devido ao seu perfil financeiro atual. \nSeu comprometimento financeiro elevado e o número de contas ativas foram os principais fatores que influenciaram essa decisão. \nPara uma nova tentativa de solicitação, é recomendado que você reduza seu comprometimento financeiro e otimize a gestão de suas contas.",
+    "prediction": 1,
+    "probability": 0.994,
+    "contexts": [
+      "# Política de Comunicação com Clientes — Análise de Crédito\n\n## Objetivo\n\nEste documento orienta o agente na geração de mensagens ao cliente após a análise de crédito. A decisão de aprovação ou negativa é determinada pelo modelo preditivo. O agente deve comunicar essa decisão de forma clara, respeitosa e útil, explicando os fatores que influenciaram o resultado com base na análise do perfil.\n\n## Tom e Linguagem\n\n### Princípios gerais\n\n# Política de Comunicação com Clientes — Análise de Crédito\n\n## Objetivo\n\nEste documento orienta o agente na geração de mensagens ao cliente após a análise de crédito. A decisão de aprovação ou negativa é determinada pelo modelo preditivo. O agente deve comunicar essa decisão de forma clara, respeitosa e útil, explicando os fatores que influenciaram o resultado com base na análise do perfil.\n\n---\n\n## Tom e Linguagem\n\n### Princípios gerais\n\n## Comunicação de Aprovação (resultado 0)\n\n### Tom\nPositivo, direto e encorajador. Não exagere na comemoração — mantenha o profissionalismo.\n\n### Exemplo de estrutura\n> \"Olá, [Nome]. Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil financeiro demonstrou boa capacidade de pagamento, com destaque para [fator positivo principal]. Em breve você receberá os detalhes do contrato.\""
+    ]
+  },
+  {
+    "id": "gs_002",
+    "input": {
+      "borrower_income": 84500,
+      "debt_to_income": 0.6449,
+      "num_of_accounts": 12,
+      "derogatory_marks": 2
+    },
+    "expected_output": {
+      "prediction": 1,
+      "label": "loan denied",
+      "message": "Olá! Após análise do seu perfil, não foi possível aprovar o crédito solicitado neste momento. Os principais fatores foram a relação entre dívidas e renda acima do recomendado e a presença de registros negativos no histórico de crédito. Recomendamos trabalhar na regularização das pendências e na redução do comprometimento financeiro mensal antes de uma nova solicitação. Estamos à disposição para qualquer dúvida."
+    },
+    "agent_response": "Prezado cliente, lamentamos informar que sua solicitação de crédito não foi aprovada devido ao seu perfil financeiro atual. \nSeu comprometimento financeiro elevado e o número de contas ativas foram os principais fatores que influenciaram essa decisão. \nPara uma nova tentativa de solicitação, é recomendado que você reduza seu comprometimento financeiro e otimize a gestão de suas contas.",
+    "prediction": 1,
+    "probability": 0.994,
+    "contexts": [
+      "# Política de Comunicação com Clientes — Análise de Crédito\n\n## Objetivo\n\nEste documento orienta o agente na geração de mensagens ao cliente após a análise de crédito. A decisão de aprovação ou negativa é determinada pelo modelo preditivo. O agente deve comunicar essa decisão de forma clara, respeitosa e útil, explicando os fatores que influenciaram o resultado com base na análise do perfil.\n\n## Tom e Linguagem\n\n### Princípios gerais\n\n# Política de Comunicação com Clientes — Análise de Crédito\n\n## Objetivo\n\nEste documento orienta o agente na geração de mensagens ao cliente após a análise de crédito. A decisão de aprovação ou negativa é determinada pelo modelo preditivo. O agente deve comunicar essa decisão de forma clara, respeitosa e útil, explicando os fatores que influenciaram o resultado com base na análise do perfil.\n\n---\n\n## Tom e Linguagem\n\n### Princípios gerais\n\n## Comunicação de Aprovação (resultado 0)\n\n### Tom\nPositivo, direto e encorajador. Não exagere na comemoração — mantenha o profissionalismo.\n\n### Exemplo de estrutura\n> \"Olá, [Nome]. Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil financeiro demonstrou boa capacidade de pagamento, com destaque para [fator positivo principal]. Em breve você receberá os detalhes do contrato.\""
+    ]
+  },
+  {
+    "id": "gs_003",
+    "input": {
+      "borrower_income": 88000,
+      "debt_to_income": 0.659,
+      "num_of_accounts": 13,
+      "derogatory_marks": 2
+    },
+    "expected_output": {
+      "prediction": 1,
+      "label": "loan denied",
+      "message": "Olá! Após análise do seu perfil, não foi possível aprovar o crédito solicitado neste momento. Os fatores que mais influenciaram essa decisão foram o alto comprometimento financeiro em relação à renda e a existência de registros negativos no histórico de crédito. Recomendamos priorizar a regularização das pendências e reduzir o número de compromissos financeiros ativos. Melhorias nesses fatores têm impacto direto em análises futuras."
+    },
+    "agent_response": "Prezado cliente, lamentamos informar que não foi possível aprovar seu pedido de crédito devido ao seu perfil financeiro atual. \nSeu comprometimento financeiro elevado e histórico de crédito com registros negativos foram os principais fatores que influenciaram essa decisão. \nPara uma nova tentativa, é recomendado que você reduza seu comprometimento financeiro e trabalhe na melhoria de seu histórico de crédito.",
+    "prediction": 1,
+    "probability": 0.9939,
+    "contexts": [
+      "# Política de Comunicação com Clientes — Análise de Crédito\n\n## Objetivo\n\nEste documento orienta o agente na geração de mensagens ao cliente após a análise de crédito. A decisão de aprovação ou negativa é determinada pelo modelo preditivo. O agente deve comunicar essa decisão de forma clara, respeitosa e útil, explicando os fatores que influenciaram o resultado com base na análise do perfil.\n\n## Tom e Linguagem\n\n### Princípios gerais\n\n# Política de Comunicação com Clientes — Análise de Crédito\n\n## Objetivo\n\nEste documento orienta o agente na geração de mensagens ao cliente após a análise de crédito. A decisão de aprovação ou negativa é determinada pelo modelo preditivo. O agente deve comunicar essa decisão de forma clara, respeitosa e útil, explicando os fatores que influenciaram o resultado com base na análise do perfil.\n\n---\n\n## Tom e Linguagem\n\n### Princípios gerais\n\n## Comunicação de Aprovação (resultado 0)\n\n### Tom\nPositivo, direto e encorajador. Não exagere na comemoração — mantenha o profissionalismo.\n\n### Exemplo de estrutura\n> \"Olá, [Nome]. Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil financeiro demonstrou boa capacidade de pagamento, com destaque para [fator positivo principal]. Em breve você receberá os detalhes do contrato.\""
+    ]
+  },
+  {
+    "id": "gs_004",
+    "input": {
+      "borrower_income": 40800,
+      "debt_to_income": 0.2647,
+      "num_of_accounts": 2,
+      "derogatory_marks": 0
+    },
+    "expected_output": {
+      "prediction": 0,
+      "label": "loan approved",
+      "message": "Olá! Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil demonstrou boa capacidade de pagamento, com destaque para a relação equilibrada entre dívidas e renda e a ausência de registros negativos no histórico de crédito. Em breve você receberá os detalhes do contrato."
+    },
+    "agent_response": "Olá, temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil financeiro demonstrou boa capacidade de pagamento, com destaque para sua renda estável e baixo índice de dívida em relação à renda. Em breve você receberá os detalhes do contrato.\n\nSeu perfil financeiro apresentou fatores positivos, como uma renda média e um baixo índice de dívida em relação à renda, o que demonstra uma boa capacidade de pagamento. Além disso, o número de contas ativas é saudável e não há marcas negativas em seu histórico de crédito.\n\nVocê pode solicitar uma nova análise a qualquer momento. Perfis financeiros mudam, e melhorias nos fatores acima têm impacto direto no resultado.",
+    "prediction": 0,
+    "probability": 0.0001,
+    "contexts": [
+      "# Política de Comunicação com Clientes — Análise de Crédito\n\n## Objetivo\n\nEste documento orienta o agente na geração de mensagens ao cliente após a análise de crédito. A decisão de aprovação ou negativa é determinada pelo modelo preditivo. O agente deve comunicar essa decisão de forma clara, respeitosa e útil, explicando os fatores que influenciaram o resultado com base na análise do perfil.\n\n## Tom e Linguagem\n\n### Princípios gerais\n\n# Política de Comunicação com Clientes — Análise de Crédito\n\n## Objetivo\n\nEste documento orienta o agente na geração de mensagens ao cliente após a análise de crédito. A decisão de aprovação ou negativa é determinada pelo modelo preditivo. O agente deve comunicar essa decisão de forma clara, respeitosa e útil, explicando os fatores que influenciaram o resultado com base na análise do perfil.\n\n---\n\n## Tom e Linguagem\n\n### Princípios gerais\n\n## Comunicação de Aprovação (resultado 0)\n\n### Tom\nPositivo, direto e encorajador. Não exagere na comemoração — mantenha o profissionalismo.\n\n### Exemplo de estrutura\n> \"Olá, [Nome]. Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil financeiro demonstrou boa capacidade de pagamento, com destaque para [fator positivo principal]. Em breve você receberá os detalhes do contrato.\""
+    ]
+  },
+  {
+    "id": "gs_005",
+    "input": {
+      "borrower_income": 47300,
+      "debt_to_income": 0.3657,
+      "num_of_accounts": 3,
+      "derogatory_marks": 0
+    },
+    "expected_output": {
+      "prediction": 0,
+      "label": "loan approved",
+      "message": "Olá! Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil demonstrou boa gestão financeira, com destaque para a ausência de registros negativos e um índice de comprometimento de renda dentro de parâmetros saudáveis. Em breve você receberá os detalhes do contrato."
+    },
+    "agent_response": "Olá, temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil financeiro demonstrou boa capacidade de pagamento, com destaque para a ausência de marcas negativas e uma renda estável. Em breve você receberá os detalhes do contrato. \nSeu perfil financeiro apresenta pontos fortes, como a ausência de marcas negativas, o que indica um histórico de pagamentos responsáveis, e uma renda estável, que demonstra capacidade de honrar compromissos financeiros. \nVocê pode solicitar uma nova análise a qualquer momento, pois melhorias nos fatores acima têm impacto direto no resultado.",
+    "prediction": 0,
+    "probability": 0.0105,
+    "contexts": [
+      "# Política de Comunicação com Clientes — Análise de Crédito\n\n## Objetivo\n\nEste documento orienta o agente na geração de mensagens ao cliente após a análise de crédito. A decisão de aprovação ou negativa é determinada pelo modelo preditivo. O agente deve comunicar essa decisão de forma clara, respeitosa e útil, explicando os fatores que influenciaram o resultado com base na análise do perfil.\n\n## Tom e Linguagem\n\n### Princípios gerais\n\n# Política de Comunicação com Clientes — Análise de Crédito\n\n## Objetivo\n\nEste documento orienta o agente na geração de mensagens ao cliente após a análise de crédito. A decisão de aprovação ou negativa é determinada pelo modelo preditivo. O agente deve comunicar essa decisão de forma clara, respeitosa e útil, explicando os fatores que influenciaram o resultado com base na análise do perfil.\n\n---\n\n## Tom e Linguagem\n\n### Princípios gerais\n\n## Comunicação de Aprovação (resultado 0)\n\n### Tom\nPositivo, direto e encorajador. Não exagere na comemoração — mantenha o profissionalismo.\n\n### Exemplo de estrutura\n> \"Olá, [Nome]. Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil financeiro demonstrou boa capacidade de pagamento, com destaque para [fator positivo principal]. Em breve você receberá os detalhes do contrato.\""
+    ]
+  }
+]

@@ -1,0 +1,107 @@
+{
+  "modelo_juiz": "llama-3.1-8b-instant",
+  "amostras_avaliadas": 5,
+  "summary": {
+    "clareza": 4.4,
+    "correcao_tecnica": 4.6,
+    "adequacao_ao_negocio": 4.4,
+    "media_geral": 4.47
+  },
+  "per_sample": [
+    {
+      "id": "gs_001",
+      "label": "loan denied",
+      "scores": {
+        "clareza": {
+          "nota": 4,
+          "justificativa": "A mensagem é clara e fácil de entender, mas poderia ser ainda mais concisa e direta."
+        },
+        "correcao_tecnica": {
+          "nota": 5,
+          "justificativa": "Os fatores mencionados (comprometimento financeiro elevado e número de contas ativas) são coerentes com o perfil do cliente."
+        },
+        "adequacao_ao_negocio": {
+          "nota": 4,
+          "justificativa": "A mensagem segue um tom bancário adequado, mas poderia ser ainda mais neutra e objetiva, sem culpar o cliente explicitamente."
+        }
+      },
+      "media": 4.33
+    },
+    {
+      "id": "gs_002",
+      "label": "loan denied",
+      "scores": {
+        "clareza": {
+          "nota": 4,
+          "justificativa": "A mensagem é clara e fácil de entender, mas poderia ser mais objetiva e evitar expressões como 'lamentamos informar'."
+        },
+        "correcao_tecnica": {
+          "nota": 5,
+          "justificativa": "Os fatores mencionados (comprometimento financeiro elevado e número de contas ativas) são coerentes com o perfil do cliente."
+        },
+        "adequacao_ao_negocio": {
+          "nota": 4,
+          "justificativa": "A mensagem segue um tom bancário adequado, mas poderia ser mais neutra e evitar culpar o cliente por sua situação financeira."
+        }
+      },
+      "media": 4.33
+    },
+    {
+      "id": "gs_003",
+      "label": "loan denied",
+      "scores": {
+        "clareza": {
+          "nota": 4,
+          "justificativa": "A mensagem é clara e fácil de entender, mas poderia ser ainda mais concisa e direta."
+        },
+        "correcao_tecnica": {
+          "nota": 5,
+          "justificativa": "Os fatores mencionados (comprometimento financeiro elevado e registros negativos) são coerentes com o perfil do cliente."
+        },
+        "adequacao_ao_negocio": {
+          "nota": 4,
+          "justificativa": "A mensagem segue um tom bancário adequado, mas poderia ser ainda mais neutra e objetiva, sem culpar o cliente explicitamente."
+        }
+      },
+      "media": 4.33
+    },
+    {
+      "id": "gs_004",
+      "label": "loan approved",
+      "scores": {
+        "clareza": {
+          "nota": 5,
+          "justificativa": "A mensagem é clara e fácil de entender, com linguagem simples e direta."
+        },
+        "correcao_tecnica": {
+          "nota": 4,
+          "justificativa": "A mensagem menciona fatores positivos do perfil do cliente, como renda estável e baixo índice de dívida, mas não é tão precisa quanto a mensagem de referência em relação à ausência de registros negativos."
+        },
+        "adequacao_ao_negocio": {
+          "nota": 5,
+          "justificativa": "A mensagem segue o tom bancário adequado, sem culpar o cliente e sem linguagem inadequada, e incentiva o cliente a solicitar uma nova análise se houver mudanças em seu perfil financeiro."
+        }
+      },
+      "media": 4.67
+    },
+    {
+      "id": "gs_005",
+      "label": "loan approved",
+      "scores": {
+        "clareza": {
+          "nota": 5,
+          "justificativa": "A mensagem é clara e fácil de entender, com linguagem simples e direta."
+        },
+        "correcao_tecnica": {
+          "nota": 4,
+          "justificativa": "A mensagem menciona pontos fortes do perfil do cliente, como ausência de marcas negativas e renda estável, mas não menciona explicitamente o índice dívida/renda."
+        },
+        "adequacao_ao_negocio": {
+          "nota": 5,
+          "justificativa": "A mensagem segue um tom bancário adequado, sem culpar o cliente e sem linguagem inadequada, e destaca os pontos fortes do perfil do cliente."
+        }
+      },
+      "media": 4.67
+    }
+  ]
+}
