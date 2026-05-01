@@ -127,7 +127,9 @@ def run_agent(
     derogatory_marks: int,
     prediction: int,
     probability: float,
-) -> str:
+    model: str = GROQ_MODEL,
+    temperature: float = 0.1,
+) -> tuple[str, int]:
     """
     Run the ReAct loop for a given applicant and return the client message.
 
@@ -143,9 +145,11 @@ def run_agent(
         derogatory_marks: Number of negative marks.
         prediction: MLP output (0 = low risk, 1 = high risk).
         probability: MLP probability of high risk.
+        model: Groq model name (default: GROQ_MODEL).
+        temperature: Sampling temperature (default: 0.1).
 
     Returns:
-        str: Final message to be sent to the client.
+        tuple[str, int]: Final message and total tokens used across all iterations.
     """
     decision = "APROVADO" if prediction == 0 else "NÃO APROVADO"
 
@@ -166,19 +170,24 @@ def run_agent(
         {"role": "user", "content": input_text},
     ]
 
+    total_tokens = 0
+
     for _ in range(6):
         response = agent.chat.completions.create(
-            model=GROQ_MODEL,
+            model=model,
             messages=messages,
             tools=TOOLS_SCHEMA,
             tool_choice="auto",
-            temperature=0.1,
+            temperature=temperature,
         )
+
+        if response.usage:
+            total_tokens += response.usage.total_tokens
 
         message = response.choices[0].message
 
         if not message.tool_calls:
-            return message.content
+            return message.content, total_tokens
 
         messages.append(message)
 
@@ -194,4 +203,4 @@ def run_agent(
                 }
             )
 
-    return message.content
+    return message.content, total_tokens

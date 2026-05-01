@@ -44,11 +44,8 @@ OUTPUT_PATH = ROOT / "evaluation/results/ragas_results.json"
 MAX_SAMPLES = 5
 
 
-def _format_question(entry: dict) -> str:
+def format_question(inp: dict, prediction: int, probability: float) -> str:
     """Reconstrói o input exato enviado ao agente."""
-    inp = entry["input"]
-    prediction = entry["prediction"]
-    probability = entry["probability"]
     decision = "APROVADO" if prediction == 0 else "NÃO APROVADO"
     return (
         f"Perfil do solicitante:\n"
@@ -60,6 +57,48 @@ def _format_question(entry: dict) -> str:
         f"(probabilidade de alto risco: {probability:.1%})\n\n"
         f"Gere a mensagem de comunicação para este cliente."
     )
+
+
+def score_single(
+    metrics: dict,
+    user_input: str,
+    response: str,
+    reference: str,
+    contexts: list[str],
+) -> dict:
+    """Calcula as 4 métricas RAGAS para uma única amostra.
+
+    Args:
+        metrics: dict com chaves answer_relevancy, faithfulness,
+                 context_precision, context_recall (instâncias já criadas).
+
+    Cada métrica é avaliada de forma independente: se o Groq rejeitar o JSON
+    gerado internamente (erro 400 json_validate_failed), o valor fica None
+    e a avaliação das demais continua normalmente.
+    """
+    calls = {
+        "answer_relevancy": lambda: metrics["answer_relevancy"].score(
+            user_input=user_input, response=response
+        ),
+        "faithfulness": lambda: metrics["faithfulness"].score(
+            user_input=user_input, response=response, retrieved_contexts=contexts
+        ),
+        "context_precision": lambda: metrics["context_precision"].score(
+            user_input=user_input, reference=reference, retrieved_contexts=contexts
+        ),
+        "context_recall": lambda: metrics["context_recall"].score(
+            user_input=user_input, retrieved_contexts=contexts, reference=reference
+        ),
+    }
+
+    result = {}
+    for name, fn in calls.items():
+        try:
+            result[name] = round(fn().value, 4)
+        except Exception as exc:
+            print(f"    [aviso] {name} falhou ({type(exc).__name__}): {exc}")
+            result[name] = None
+    return result
 
 
 def load_responses() -> list[dict]:
@@ -97,36 +136,29 @@ def main() -> None:
 
     print("Rodando avaliação RAGAS...\n")
 
+    metrics = {
+        "answer_relevancy": answer_relevancy,
+        "faithfulness": faithfulness,
+        "context_precision": context_precision,
+        "context_recall": context_recall,
+    }
+
     records = []
     for i, entry in enumerate(responses, start=1):
         sample_id = entry["id"]
-        user_input = _format_question(entry)
-        response = entry["agent_response"]
-        reference = entry["expected_output"]["message"]
-        contexts = entry["contexts"]
-
+        user_input = format_question(
+            entry["input"], entry["prediction"], entry["probability"]
+        )
         print(f"  [{i}/{len(responses)}] {sample_id}...")
 
-        ar = answer_relevancy.score(user_input=user_input, response=response)
-        ff = faithfulness.score(
-            user_input=user_input, response=response, retrieved_contexts=contexts
+        scores = score_single(
+            metrics,
+            user_input=user_input,
+            response=entry["agent_response"],
+            reference=entry["expected_output"]["message"],
+            contexts=entry["contexts"],
         )
-        cp = context_precision.score(
-            user_input=user_input, reference=reference, retrieved_contexts=contexts
-        )
-        cr = context_recall.score(
-            user_input=user_input, retrieved_contexts=contexts, reference=reference
-        )
-
-        records.append(
-            {
-                "id": sample_id,
-                "answer_relevancy": round(ar.value, 4),
-                "faithfulness": round(ff.value, 4),
-                "context_precision": round(cp.value, 4),
-                "context_recall": round(cr.value, 4),
-            }
-        )
+        records.append({"id": sample_id, **scores})
 
     df = pd.DataFrame(records)
     metric_cols = [
@@ -140,7 +172,9 @@ def main() -> None:
     print(df[["id"] + metric_cols].to_string(index=False))
 
     scores = {
-        "summary": {col: round(float(df[col].mean()), 4) for col in metric_cols},
+        "summary": {
+            col: round(float(df[col].mean(skipna=True)), 4) for col in metric_cols
+        },
         "per_sample": records,
     }
 
@@ -151,7 +185,8 @@ def main() -> None:
 
     print("\n--- Médias ---")
     for metric, value in scores["summary"].items():
-        print(f"  {metric}: {value:.4f}")
+        display = f"{value:.4f}" if value is not None else "N/A"
+        print(f"  {metric}: {display}")
 
     print(f"\nResultados salvos em {OUTPUT_PATH}")
 

@@ -6,6 +6,7 @@ from langchain_groq import ChatGroq
 
 load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
+# Modelo Llama 3.3 70b versatile já tem quantização aplicada.
 GROQ_MODEL = "llama-3.3-70b-versatile"
 
 

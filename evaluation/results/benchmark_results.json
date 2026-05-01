@@ -1,0 +1,44 @@
+[
+  {
+    "config": "baseline",
+    "modelo": "llama-3.3-70b-versatile",
+    "temperature": 0.1,
+    "latencia_media_ms": 2580.6,
+    "tokens_usados_media": 4228.0,
+    "ragas_answer_relevancy": 0.4715,
+    "ragas_faithfulness": 0.0556,
+    "ragas_context_precision": 1.0,
+    "ragas_context_recall": 0.625,
+    "judge_clareza": 4.0,
+    "judge_correcao_tecnica": 4.0,
+    "judge_adequacao_negocio": 3.5
+  },
+  {
+    "config": "modelo_menor",
+    "modelo": "llama-3.1-8b-instant",
+    "temperature": 0.1,
+    "latencia_media_ms": 1912.1,
+    "tokens_usados_media": 4467.5,
+    "ragas_answer_relevancy": 0.4716,
+    "ragas_faithfulness": 0.0,
+    "ragas_context_precision": 1.0,
+    "ragas_context_recall": 0.625,
+    "judge_clareza": 4.0,
+    "judge_correcao_tecnica": 4.0,
+    "judge_adequacao_negocio": 3.5
+  },
+  {
+    "config": "temperature_alta",
+    "modelo": "llama-3.3-70b-versatile",
+    "temperature": 0.7,
+    "latencia_media_ms": 9639.2,
+    "tokens_usados_media": 4238.0,
+    "ragas_answer_relevancy": 0.4715,
+    "ragas_faithfulness": 0.1625,
+    "ragas_context_precision": 1.0,
+    "ragas_context_recall": 0.625,
+    "judge_clareza": 4.0,
+    "judge_correcao_tecnica": 4.0,
+    "judge_adequacao_negocio": 3.5
+  }
+]

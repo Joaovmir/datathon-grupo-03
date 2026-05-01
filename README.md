@@ -275,11 +275,11 @@ make dvc         # rodar pipeline de dados
 
 ### Etapa 2 — LLM + Agente
 
-- [~] LLM servido via API com quantização aplicada
+- [x] LLM servido via API com quantização aplicada
 - [x] Agente ReAct funcional com ≥ 3 tools relevantes ao domínio
 - [x] RAG retornando contexto relevante dos dados fornecidos
 - [x] CI/CD pipeline funcional (GitHub Actions)
-- [ ] Benchmark documentado com ≥ 3 configurações
+- [x] Benchmark documentado com ≥ 3 configurações
 
 
 ### Etapa 3 — Avaliação + Observabilidade
