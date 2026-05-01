@@ -40,8 +40,10 @@ def validate_input(
 
     if borrower_income < 0:
         raise InputGuardrailError("'borrower_income' não pode ser negativo.")
-    if debt_to_income < 0:
-        raise InputGuardrailError("'debt_to_income' não pode ser negativo.")
+    if (debt_to_income < 0) or (debt_to_income > 1):
+        raise InputGuardrailError(
+            "'debt_to_income' não pode ser negativo ou maior que 1."
+        )
     if num_of_accounts < 0:
         raise InputGuardrailError("'num_of_accounts' não pode ser negativo.")
     # derogatory_marks = 0 é válido (nenhuma marca negativa)
