@@ -164,7 +164,7 @@ def explain_endpoint(request: ExplainRequest) -> ExplainResponse:
     prediction: int = predictions[0]
     probability: float = probabilities[0]
 
-    message = run_agent(
+    message, _ = run_agent(
         artifacts["agent"],
         borrower_income=request.borrower_income,
         debt_to_income=request.debt_to_income,

@@ -106,7 +106,7 @@ def main() -> None:
         prediction = int(predictions[0])
         probability = float(probabilities[0])
 
-        answer = run_agent(
+        answer, _ = run_agent(
             agent,
             borrower_income=borrower_income,
             debt_to_income=debt_to_income,
