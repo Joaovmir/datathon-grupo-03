@@ -1,0 +1,724 @@
+{
+  "metodologia": {
+    "explainer": "shap.KernelExplainer (black-box)",
+    "background": "zeros no espaco escalado (media apos StandardScaler)",
+    "features": [
+      "borrower_income",
+      "debt_to_income",
+      "num_of_accounts",
+      "derogatory_marks"
+    ],
+    "interpretacao_shap": "Valor positivo = aumenta a probabilidade de alto risco (negacao). Valor negativo = reduz a probabilidade (favorece aprovacao). Magnitude = intensidade da influencia."
+  },
+  "agregado": {
+    "total_amostras": 20,
+    "feature_dominante_frequencia": {
+      "borrower_income": 18,
+      "derogatory_marks": 2
+    },
+    "feature_mais_impactante_media": "borrower_income",
+    "feature_menos_impactante_media": "derogatory_marks",
+    "shap_medio_global": {
+      "borrower_income": 0.2622,
+      "debt_to_income": 0.0499,
+      "num_of_accounts": 0.1236,
+      "derogatory_marks": 0.0115
+    },
+    "shap_medio_por_label": {
+      "loan denied": {
+        "borrower_income": 0.519,
+        "debt_to_income": 0.103,
+        "num_of_accounts": 0.246,
+        "derogatory_marks": 0.0214
+      },
+      "loan approved": {
+        "borrower_income": 0.0054,
+        "debt_to_income": -0.0031,
+        "num_of_accounts": 0.0012,
+        "derogatory_marks": 0.0017
+      }
+    }
+  },
+  "por_amostra": [
+    {
+      "id": "gs_001",
+      "label": "loan denied",
+      "input": {
+        "borrower_income": 84400,
+        "debt_to_income": 0.6445,
+        "num_of_accounts": 12,
+        "derogatory_marks": 2
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": 0.6076,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": 0.2547,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": 0.1152,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.0106,
+          "direction": "aumenta risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "aumenta risco"
+    },
+    {
+      "id": "gs_002",
+      "label": "loan denied",
+      "input": {
+        "borrower_income": 84500,
+        "debt_to_income": 0.6449,
+        "num_of_accounts": 12,
+        "derogatory_marks": 2
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": 0.6087,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": 0.2518,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": 0.1161,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.0116,
+          "direction": "aumenta risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "aumenta risco"
+    },
+    {
+      "id": "gs_003",
+      "label": "loan denied",
+      "input": {
+        "borrower_income": 88000,
+        "debt_to_income": 0.659,
+        "num_of_accounts": 13,
+        "derogatory_marks": 2
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": 0.6255,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": 0.1513,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": 0.1441,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.0673,
+          "direction": "aumenta risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "aumenta risco"
+    },
+    {
+      "id": "gs_004",
+      "label": "loan approved",
+      "input": {
+        "borrower_income": 40800,
+        "debt_to_income": 0.2647,
+        "num_of_accounts": 2,
+        "derogatory_marks": 0
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": -0.0034,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": -0.0018,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": -0.0016,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.001,
+          "direction": "aumenta risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "reduz risco"
+    },
+    {
+      "id": "gs_005",
+      "label": "loan approved",
+      "input": {
+        "borrower_income": 47300,
+        "debt_to_income": 0.3657,
+        "num_of_accounts": 3,
+        "derogatory_marks": 0
+      },
+      "shap_ranking": [
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.0048,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "borrower_income",
+          "shap_value": -0.0038,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": 0.0027,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": 0.001,
+          "direction": "aumenta risco"
+        }
+      ],
+      "feature_dominante": "derogatory_marks",
+      "direcao_dominante": "aumenta risco"
+    },
+    {
+      "id": "gs_006",
+      "label": "loan approved",
+      "input": {
+        "borrower_income": 39700,
+        "debt_to_income": 0.2443,
+        "num_of_accounts": 2,
+        "derogatory_marks": 0
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": -0.0032,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": -0.0022,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": -0.0014,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.001,
+          "direction": "aumenta risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "reduz risco"
+    },
+    {
+      "id": "gs_007",
+      "label": "loan approved",
+      "input": {
+        "borrower_income": 49000,
+        "debt_to_income": 0.3877,
+        "num_of_accounts": 4,
+        "derogatory_marks": 0
+      },
+      "shap_ranking": [
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.0012,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": -0.0006,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "borrower_income",
+          "shap_value": -0.0004,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": -0.0004,
+          "direction": "reduz risco"
+        }
+      ],
+      "feature_dominante": "derogatory_marks",
+      "direcao_dominante": "aumenta risco"
+    },
+    {
+      "id": "gs_008",
+      "label": "loan denied",
+      "input": {
+        "borrower_income": 99000,
+        "debt_to_income": 0.6969,
+        "num_of_accounts": 15,
+        "derogatory_marks": 3
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": 0.6025,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": 0.2008,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": 0.1066,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.0807,
+          "direction": "aumenta risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "aumenta risco"
+    },
+    {
+      "id": "gs_009",
+      "label": "loan approved",
+      "input": {
+        "borrower_income": 37100,
+        "debt_to_income": 0.1913,
+        "num_of_accounts": 1,
+        "derogatory_marks": 0
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": -0.0023,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": -0.0021,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": -0.002,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.0005,
+          "direction": "aumenta risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "reduz risco"
+    },
+    {
+      "id": "gs_010",
+      "label": "loan denied",
+      "input": {
+        "borrower_income": 92500,
+        "debt_to_income": 0.6756,
+        "num_of_accounts": 14,
+        "derogatory_marks": 3
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": 0.5866,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": 0.2704,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": 0.0846,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.0488,
+          "direction": "aumenta risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "aumenta risco"
+    },
+    {
+      "id": "gs_011",
+      "label": "loan approved",
+      "input": {
+        "borrower_income": 39800,
+        "debt_to_income": 0.2462,
+        "num_of_accounts": 2,
+        "derogatory_marks": 0
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": -0.0032,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": -0.0022,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": -0.0014,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.001,
+          "direction": "aumenta risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "reduz risco"
+    },
+    {
+      "id": "gs_012",
+      "label": "loan denied",
+      "input": {
+        "borrower_income": 55000,
+        "debt_to_income": 0.5818,
+        "num_of_accounts": 8,
+        "derogatory_marks": 1
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": 0.0131,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": 0.0091,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": -0.0083,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.0037,
+          "direction": "aumenta risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "aumenta risco"
+    },
+    {
+      "id": "gs_013",
+      "label": "loan approved",
+      "input": {
+        "borrower_income": 62000,
+        "debt_to_income": 0.4032,
+        "num_of_accounts": 5,
+        "derogatory_marks": 0
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": 0.0739,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": 0.0205,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": -0.0184,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.0049,
+          "direction": "aumenta risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "aumenta risco"
+    },
+    {
+      "id": "gs_014",
+      "label": "loan denied",
+      "input": {
+        "borrower_income": 73000,
+        "debt_to_income": 0.6301,
+        "num_of_accounts": 10,
+        "derogatory_marks": 2
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": 0.5301,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": 0.3827,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": 0.092,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": -0.0189,
+          "direction": "reduz risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "aumenta risco"
+    },
+    {
+      "id": "gs_015",
+      "label": "loan approved",
+      "input": {
+        "borrower_income": 44000,
+        "debt_to_income": 0.3181,
+        "num_of_accounts": 3,
+        "derogatory_marks": 0
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": -0.0059,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.0021,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": 0.0005,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": -0.0,
+          "direction": "reduz risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "reduz risco"
+    },
+    {
+      "id": "gs_016",
+      "label": "loan denied",
+      "input": {
+        "borrower_income": 105000,
+        "debt_to_income": 0.7142,
+        "num_of_accounts": 16,
+        "derogatory_marks": 4
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": 0.6001,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": 0.2284,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": 0.0855,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.0785,
+          "direction": "aumenta risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "aumenta risco"
+    },
+    {
+      "id": "gs_017",
+      "label": "loan approved",
+      "input": {
+        "borrower_income": 33000,
+        "debt_to_income": 0.1818,
+        "num_of_accounts": 1,
+        "derogatory_marks": 0
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": -0.0023,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": -0.002,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": -0.002,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.0005,
+          "direction": "aumenta risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "reduz risco"
+    },
+    {
+      "id": "gs_018",
+      "label": "loan denied",
+      "input": {
+        "borrower_income": 68000,
+        "debt_to_income": 0.6029,
+        "num_of_accounts": 9,
+        "derogatory_marks": 1
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": 0.471,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": 0.3841,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": 0.1155,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": 0.0043,
+          "direction": "aumenta risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "aumenta risco"
+    },
+    {
+      "id": "gs_019",
+      "label": "loan approved",
+      "input": {
+        "borrower_income": 52000,
+        "debt_to_income": 0.423,
+        "num_of_accounts": 5,
+        "derogatory_marks": 0
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": 0.0042,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": -0.0031,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": -0.0028,
+          "direction": "reduz risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": -0.0003,
+          "direction": "reduz risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "aumenta risco"
+    },
+    {
+      "id": "gs_020",
+      "label": "loan denied",
+      "input": {
+        "borrower_income": 78000,
+        "debt_to_income": 0.6538,
+        "num_of_accounts": 11,
+        "derogatory_marks": 3
+      },
+      "shap_ranking": [
+        {
+          "feature": "borrower_income",
+          "shap_value": 0.5445,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "num_of_accounts",
+          "shap_value": 0.3337,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "debt_to_income",
+          "shap_value": 0.1716,
+          "direction": "aumenta risco"
+        },
+        {
+          "feature": "derogatory_marks",
+          "shap_value": -0.0729,
+          "direction": "reduz risco"
+        }
+      ],
+      "feature_dominante": "borrower_income",
+      "direcao_dominante": "aumenta risco"
+    }
+  ]
+}

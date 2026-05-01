@@ -1,0 +1,77 @@
+{
+  "dataset": {
+    "fonte": "data\\raw\\lending_data.csv",
+    "total_registros": 77536
+  },
+  "metodologia": {
+    "proxy_utilizado": "borrower_income",
+    "justificativa_proxy": "Na ausência de variáveis demográficas, a renda é o proxy mais correlacionado com classe socioeconômica disponível no dataset.",
+    "divisao_faixas": "tercis (33º e 66º percentil)",
+    "regra_aplicada": "Regra dos 80% (4/5 rule) — ECOA/CFPB",
+    "threshold_disparate_impact": 0.8
+  },
+  "faixas_de_renda": {
+    "min": 30000,
+    "max": 105200,
+    "tercil_33": 46000,
+    "tercil_66": 50200,
+    "faixas": {
+      "baixa": "até R$ 46,000",
+      "média": "R$ 46,000 – R$ 50,200",
+      "alta": "acima de R$ 50,200"
+    }
+  },
+  "taxas_por_faixa": {
+    "baixa": {
+      "n_total": 26134,
+      "n_aprovados": 26134,
+      "n_negados": 0,
+      "taxa_negacao": 0.0,
+      "taxa_aprovacao": 1.0
+    },
+    "média": {
+      "n_total": 25749,
+      "n_aprovados": 25749,
+      "n_negados": 0,
+      "taxa_negacao": 0.0,
+      "taxa_aprovacao": 1.0
+    },
+    "alta": {
+      "n_total": 25653,
+      "n_aprovados": 22744,
+      "n_negados": 2909,
+      "taxa_negacao": 0.1134,
+      "taxa_aprovacao": 0.8866
+    }
+  },
+  "disparate_impact": {
+    "baixa": {
+      "taxa_aprovacao": 1.0,
+      "disparate_impact_ratio": 1.0,
+      "violacao_regra_80pct": false
+    },
+    "média": {
+      "taxa_aprovacao": 1.0,
+      "disparate_impact_ratio": 1.0,
+      "violacao_regra_80pct": false
+    },
+    "alta": {
+      "taxa_aprovacao": 0.8866,
+      "disparate_impact_ratio": 0.8866,
+      "violacao_regra_80pct": false
+    }
+  },
+  "achado": {
+    "violacao_detectada": false,
+    "faixas_com_violacao": [],
+    "descricao": "Nenhuma violação da regra dos 80% detectada entre as faixas de renda. O modelo não apresenta disparate impact socioeconômico mensurável com base no proxy de renda."
+  },
+  "limitacoes_conhecidas": [
+    "O dataset não contém variáveis demográficas (idade, gênero, raça, CEP). A análise usa renda como proxy, o que é uma aproximação e não substitui uma auditoria com dados demográficos reais.",
+    "A divisão em tercis é arbitrária — grupos reais podem ter distribuições diferentes dependendo do contexto geográfico e temporal."
+  ],
+  "recomendacoes": [
+    "Realizar análise de fairness periódica em produção com dados reais de solicitantes para detectar drift de viés ao longo do tempo.",
+    "Documentar este relatório como evidência de due diligence para conformidade regulatória (LGPD, Resolução BCB nº 4.557, ECOA)."
+  ]
+}
