@@ -3,10 +3,16 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 import pandas as pd
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, HTTPException, Response
 from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 from pydantic import BaseModel
 
+from src.agent.guardrails import (
+    InputGuardrailError,
+    OutputGuardrailError,
+    validate_input,
+    validate_output,
+)
 from src.agent.rag_pipeline import load_index
 from src.agent.react_agent import build_agent, run_agent
 from src.agent.tools import initialize_tools
@@ -158,7 +164,21 @@ def explain_endpoint(request: ExplainRequest) -> ExplainResponse:
     - Identifica os fatores que mais influenciaram a decisão (SHAP)
     - Consulta as políticas de comunicação do banco
     - Gera uma mensagem empática e personalizada para o cliente
+
+    Guardrails:
+    - Input: valida que os campos são não-negativos e não nulos (422 se inválido).
+    - Output: bloqueia respostas com palavras proibidas (502 se violado).
     """
+    try:
+        validate_input(
+            borrower_income=request.borrower_income,
+            debt_to_income=request.debt_to_income,
+            num_of_accounts=request.num_of_accounts,
+            derogatory_marks=request.derogatory_marks,
+        )
+    except InputGuardrailError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+
     data = pd.DataFrame([request.model_dump()])
     predictions, probabilities = predict(data, artifacts["model"], artifacts["scaler"])
     prediction: int = predictions[0]
@@ -173,6 +193,12 @@ def explain_endpoint(request: ExplainRequest) -> ExplainResponse:
         prediction=prediction,
         probability=probability,
     )
+
+    try:
+        validate_output(message)
+    except OutputGuardrailError as exc:
+        logger.warning("Output guardrail acionado: %s", exc)
+        raise HTTPException(status_code=502, detail=str(exc))
 
     return ExplainResponse(
         prediction=prediction,
