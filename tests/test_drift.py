@@ -2,42 +2,9 @@ import logging
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
 import pytest
 
 from src.monitoring import drift
-
-# ------------------------
-# Fixtures
-# ------------------------
-
-
-@pytest.fixture
-def reference_data():
-    np.random.seed(42)
-    return pd.DataFrame(
-        {
-            "feature_1": np.random.normal(0, 1, 1000),
-            "feature_2": np.random.normal(5, 2, 1000),
-        }
-    )
-
-
-@pytest.fixture
-def current_data_stable(reference_data):
-    return reference_data.copy()
-
-
-@pytest.fixture
-def current_data_drifted():
-    np.random.seed(42)
-    return pd.DataFrame(
-        {
-            "feature_1": np.random.normal(3, 1, 1000),
-            "feature_2": np.random.normal(10, 2, 1000),
-        }
-    )
-
 
 # ------------------------
 # compute_psi
