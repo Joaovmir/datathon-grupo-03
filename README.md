@@ -1,18 +1,148 @@
-# 🧠 datathon-grupo-03
+# 🧠 Credit Risk Analysis System — MLOps + LLMOps (datathon-grupo-03)
 
-Projeto de Engenharia de Machine Learning com foco em **MLOps + LLMOps**, incluindo treinamento, avaliação, serving, monitoramento e governança.
+Projeto completo de Engenharia de Machine Learning que combina **modelo preditivo + LLM + RAG + governança**, cobrindo todo o ciclo de vida de um sistema de IA em produção.
 
+## 🎯 Visão Geral
+
+Este projeto implementa um sistema end-to-end de **análise de crédito com explicabilidade**, onde:
+
+* Um modelo de ML prevê o risco de crédito
+* Um agente LLM gera explicações em linguagem natural
+* Guardrails garantem segurança e conformidade
+* O sistema é monitorado, versionado e auditável
+
+## 🧠 Arquitetura do Sistema
+
+> O sistema combina um modelo preditivo com um agente LLM, garantindo explicabilidade, segurança e monitoramento contínuo.
+
+```mermaid
+flowchart LR
+
+
+    %% ===== SERVING =====
+    subgraph Serving
+        A@{ shape: lean-r, label: "Input de dados" } --> B[API]
+        B --> C@{ shape: lean-r, label: "Input guardrails" }
+        C --> D[Modelo MLP - Previsao]
+        D --> E[SHAP]
+        E --> F[RAG - Politicas]
+        F --> G[LLM Agent]
+        G --> H@{ shape: lean-l, label: "Output Guardrails" }
+        H --> I@{ shape: stadium, label: "Resposta da LLM" }
+    end
+
+    %% ===== DATA PIPELINE =====
+    subgraph Pipeline
+        J@{ shape: cyl, label: "Dados Brutos" }-->K@{ shape: cyl, label: "Dados Processados" }
+        K --> L[Modelo MLP treinado]
+        L --> M[Avaliacao]
+    end
+
+    %% ===== OBSERVABILIDADE =====
+    subgraph Observabilidade
+        N[Prometheus]
+        O[Grafana]
+        P[MLflow]
+        Q[Deteccao de Drift]
+    end
+
+    %% ===== CONEXOES =====
+
+    %% Modelo treinado vai para serving
+    L --> D
+
+    %% Tracking
+    L --> P
+    M --> P
+    D --> P
+
+    %% Monitoring
+    B --> N
+    N --> O
+
+    %% Drift
+    D --> Q
+    Q --> P
+
+    %% ===== CORES =====
+
+    %% Serving (azul)
+    style A fill:#1f77b4,color:#fff
+    style B fill:#1f77b4,color:#fff
+    style I fill:#1f77b4,color:#fff
+
+    %% Guardrails (laranja)
+    style C fill:#ff7f0e,color:#fff
+    style H fill:#ff7f0e,color:#fff
+
+    %% Modelo (verde)
+    style D fill:#2ca02c,color:#fff
+    style E fill:#2ca02c,color:#fff
+
+    %% LLM / RAG (roxo)
+    style F fill:#9467bd,color:#fff
+    style G fill:#9467bd,color:#fff
+
+    %% Pipeline (cinza claro)
+    style J fill:#000000,color:#fff
+    style K fill:#000000,color:#fff
+    style L fill:#000000,color:#fff
+    style M fill:#000000,color:#fff
+
+    %% Observabilidade (cinza escuro)
+    style N fill:#7f7f7f,color:#fff
+    style O fill:#7f7f7f,color:#fff
+    style P fill:#7f7f7f,color:#fff
+    style Q fill:#7f7f7f,color:#fff
+
+    %% COR DAS LINHAS DE CONEXÃO
+    linkStyle default stroke:#333,stroke-width:2.5px
+
+    %% ===== CLASSES DE FUNDO =====
+    classDef serving fill:#e3f2fd,stroke:#1f77b4,stroke-width:2px,color:#000
+    classDef pipeline fill:#e3f2fd,stroke:#1f77b4,stroke-width:2px,color:#000
+    classDef obs fill:#e3f2fd,stroke:#1f77b4,stroke-width:2px,color:#000
+
+    %% ===== APLICANDO NOS SUBGRAPHS =====
+    class Serving serving
+    class Pipeline pipeline
+    class Observabilidade obs
+```
 ---
 
-## 🎯 Objetivo
+## 🚀 Principais Diferenciais
 
-Desenvolver uma solução completa de ML/LLM que seja:
+### 🧠 ML + LLM integrados
 
-* Reprodutível
-* Testável
-* Monitorável
-* Escalável
-* Segura
+* Modelo preditivo (PyTorch MLP)
+* Agente ReAct com RAG
+* Explicabilidade via SHAP
+
+### 🛡️ Segurança e Governança
+
+* Guardrails de input/output
+* Red teaming com cenários adversariais
+* Mapeamento OWASP
+* Plano de conformidade com Lei Geral de Proteção de Dados
+
+### 📊 Avaliação robusta
+
+* RAGAS (4 métricas)
+* LLM-as-judge
+* Benchmark de configurações
+* Golden dataset
+
+### 📡 Observabilidade
+
+* Monitoramento com Prometheus + Grafana
+* Detecção de drift (PSI)
+* Tracking com MLflow
+
+### 🔁 Reprodutibilidade
+
+* Pipeline com DVC
+* CI/CD com GitHub Actions
+* Versionamento completo de dados e modelo
 
 ---
 
@@ -24,14 +154,15 @@ datathon-grupo-03/
 ├── data/
 │   ├── raw/                 # Dados brutos (via DVC)
 │   ├── processed/           # Dados processados
-│   └── golden_set/          # Dataset de avaliação
+|   ├── policies/            # Políticas de crédito para LLM
+│   └── golden_set/          # Dataset de avaliação para LLM
 ├── src/
 │   ├── features/            # Engenharia de features
 │   ├── models/              # Treinamento e modelos
 │   ├── agent/               # Agente + RAG
 │   ├── serving/             # API (FastAPI)
 │   ├── monitoring/          # Drift + métricas
-│   └── security/            # Guardrails + PII
+│   └── security/            # Guardrails
 ├── tests/                   # Testes (pytest)
 ├── evaluation/              # Avaliação (RAGAS, LLM judge)
 ├── docs/                    # Documentação
@@ -42,165 +173,60 @@ datathon-grupo-03/
 ├── dvc.yaml                 # Pipeline de dados
 └── README.md
 ```
-
 ---
+
+## 📚 Documentação
+
+O projeto inclui documentação completa de governança e avaliação:
+
+* Model Card
+* System Card
+* System Evaluation Report
+* Guardrails Validation Report
+* Red Team Report
+* OWASP Mapping
+* LGPD Plan
+
+📂 Ver pasta: `docs/`
+
+
+## 🧪 Exemplo de Uso
+
+### Request
+
+```json
+{
+    "borrower_income": 47300,
+    "debt_to_income": 0.3657,
+    "num_of_accounts": 3,
+    "derogatory_marks": 0
+}
+```
+
+### Output
+
+> "Olá! Temos uma boa notícia: sua solicitação de crédito foi aprovada. Seu perfil demonstrou boa gestão financeira, com destaque para a ausência de registros negativos e um índice de comprometimento de renda dentro de parâmetros saudáveis. Em breve você receberá os detalhes do contrato."
 
 ## ⚙️ Stack Tecnológica
 
-* Gerenciamento de dependências: `uv`
-* Testes: `pytest`
-* Tracking: `MLflow`
-* API: `FastAPI`
-* Versionamento de dados: `DVC`
+* ML: PyTorch
+* LLM: Groq (llama-3.3-70b-versatile)
+* API: FastAPI
+* Tracking: MLflow
+* Dados: DVC
+* Monitoramento: Prometheus + Grafana
+* Testes: pytest
 * CI/CD: GitHub Actions
-* Qualidade de código: pre-commit (black, isort, flake8)
 
----
-
-## 🚀 Setup do Projeto
-
-### 1. Clonar repositório
+## 🚀 Setup Rápido
 
 ```bash
 git clone https://github.com/Joaovmir/datathon-grupo-03
 cd datathon-grupo-03
 ```
-
----
-
-### 2. Instalar uv
-
-```bash
+```
 pip install uv
-```
-
----
-
-### 3. Instalar dependências
-
-Dependências base:
-
-```bash
-uv sync
-```
-Todas as dependências:
-
-```bash
-uv sync --group eda --group model --group serving --group monitoring --group data --group experiment
-```
-
----
-
-### 4. Ativar pre-commit
-
-```bash
-uv run pre-commit install
-```
-
----
-
-## 🧪 Testes
-
-Rodar testes com cobertura:
-
-```bash
-uv run pytest --cov=src --cov-fail-under=60
-```
-
-Critério mínimo:
-
-```
---cov-fail-under=60
-```
-
----
-
-## 🎨 Qualidade de código
-
-Rodar lint + format:
-
-```bash
-uv run black src tests
-uv run isort src tests
-uv run flake8 src tests
-```
-
----
-
-## 🤖 Treinamento de modelo
-
-```bash
-uv run python src/models/train.py
-```
-
-Os experimentos são rastreados com **MLflow**.
-
----
-
-## 📊 MLflow
-
-Subir servidor local:
-
-```bash
-uv run mlflow server \
-    --backend-store-uri sqlite:///mlflow.db \
-    --default-artifact-root ./mlruns \
-    -p 5000
-```
-
-Acesse:
-
-```
-http://localhost:5000
-```
-
----
-
-## 🌐 Servir API
-
-```bash
-uv run uvicorn src.serving.app:app --reload --host 0.0.0.0 --port 8000
-```
-
-API disponível em:
-
-```
-http://localhost:8000
-```
-
----
-
-## 🐳 Docker
-
-### Build da imagem
-
-> Requer que `dvc repro` tenha sido executado antes (artefatos precisam existir localmente).
-
-```bash
-docker build -f src/serving/Dockerfile -t credit-risk-api .
-```
-
-### Rodar o container
-
-```bash
-docker run -p 8000:8000 credit-risk-api
-```
-
-API disponível em:
-
-```
-http://localhost:8000
-http://localhost:8000/docs
-```
-
----
-
-## 🔁 Pipeline de dados
-
-Executar pipeline com DVC:
-
-```bash
-dvc repro
+uv sync --group eda --group model --group serving --group monitoring --group data --group experiment --group agent
 ```
 
 ---
@@ -222,44 +248,82 @@ uv run pre-commit run --all-files
 
 ---
 
-## 🔄 CI/CD
+## 🧪 Testes
 
-Pipeline configurado com GitHub Actions:
-
-Etapas realizadas com o make (configuração Makefile):
-
-1. Instala dependências (`make install`)
-2. Executa pre-commit
-3. Executa testes (`make test`)
-
----
-
-## 📦 Comandos úteis
-
-Comandos configurados com Makefile, configurado para o CI/CD ou comandos locais com Linux:
+Rodar testes com cobertura:
 
 ```bash
-make install     # instalar dependências
-make test        # rodar testes
-make train       # treinar modelo
-make serve       # subir API
-make mlflow      # subir MLflow
-make precommitrun
-make lint        # rodar lint
-make format      # formatar código
-make dvc         # rodar pipeline de dados
+uv run pytest --cov=src --cov-fail-under=60
 ```
 
+Critério mínimo:
+
+```
+--cov-fail-under=60
+```
+
+## 🔁 Pipeline de Dados
+
+```bash
+dvc repro
+```
+
+## 📊 Monitoramento
+
+* Prometheus → métricas
+* Grafana → dashboards
+* MLflow → experimentos
+
+## 🐳 Docker
+
+Requer que dvc repro tenha sido executado antes (artefatos precisam existir localmente).
+
+```bash
+docker-compose up --build
+```
+
+Acesso de cada container, conforme as portas:
+
+- API: porta 8000
+- MLFlow: porta 5000
+- Prometheus: porta 9090
+- Grafana: porta 3000
+
+## 🌐 API
+
+```bash
+uv run uvicorn src.serving.app:app --reload --host 0.0.0.0 --port 8000
+```
+
+Docs:
+
+```
+http://localhost:8000/docs
+```
+
+## 📊 MLflow
+
+Subir servidor local:
+
+```bash
+uv run mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri sqlite:///mlflow.db --default-artifact-root /mlruns"
+```
+
+Acesse:
+
+```
+http://localhost:5000
+```
 ---
 
-## 📌 Boas práticas do projeto
+## 🔒 Segurança
 
-* Código modular (pipeline desacoplado)
-* Testes obrigatórios com cobertura mínima
-* Versionamento de dados com DVC
-* Experimentos rastreados com MLflow
-* CI/CD obrigatório para validação
-* Hooks de qualidade com pre-commit
+O sistema implementa:
+
+* Validação rigorosa de inputs
+* Filtro de linguagem proibida
+* Testes adversariais (red team)
+* Controle de comportamento do LLM
 
 ---
 
@@ -293,18 +357,17 @@ make dvc         # rodar pipeline de dados
 
 ### Etapa 4 — Segurança + Governança
 
-- [ ] OWASP mapping com ≥ 5 ameaças e mitigações
-- [ ] Guardrails de input e output funcionais
-- [ ] ≥ 5 cenários adversariais testados e documentados
-- [ ] Plano LGPD aplicado ao caso real
-- [~] Explicabilidade e fairness documentados
-- [ ] System Card completo
----
+- [x] OWASP mapping com ≥ 5 ameaças e mitigações
+- [x] Guardrails de input e output funcionais
+- [x] ≥ 5 cenários adversariais testados e documentados
+- [x] Plano LGPD aplicado ao caso real
+- [x] Explicabilidade e fairness documentados
+- [x] System Card completo
 
 ## 👥 Time
 
 Datathon Grupo 03
 
-- Igor do Nascimento Alves
-- João Vitor de Miranda
-- Mirla Borges Costa
+* Igor do Nascimento Alves
+* João Vitor de Miranda
+* Mirla Borges Costa
