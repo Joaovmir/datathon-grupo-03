@@ -40,16 +40,6 @@ def client(monkeypatch, tmp_path):
 
 
 @pytest.fixture
-def sample_payload():
-    return {
-        "borrower_income": 50000,
-        "debt_to_income": 0.3,
-        "num_of_accounts": 5,
-        "derogatory_marks": 1,
-    }
-
-
-@pytest.fixture
 def temp_paths(tmp_path, monkeypatch):
     """
     Redirect file paths to temporary directory.

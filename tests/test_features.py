@@ -16,34 +16,6 @@ from features.feature_engineering import (
     transform_features,
 )
 
-# ------------------------
-# Fixtures
-# ------------------------
-
-
-@pytest.fixture
-def sample_data() -> pd.DataFrame:
-    """
-    Generate a reproducible synthetic dataset for testing.
-
-    Returns:
-        pd.DataFrame: Dataset with numeric features and binary target.
-    """
-    np.random.seed(42)
-
-    return pd.DataFrame(
-        {
-            "loan_size": np.random.randint(5000, 20000, 50),
-            "interest_rate": np.random.randint(5, 12, 50),
-            "borrower_income": np.random.randint(30000, 100000, 50),
-            "debt_to_income": np.random.rand(50),
-            "num_of_accounts": np.random.randint(1, 15, 50),
-            "derogatory_marks": np.random.randint(0, 5, 50),
-            "total_debt": np.random.randint(5000, 60000, 50),
-            "loan_status": np.random.choice([0, 1], 50, p=[0.8, 0.2]),
-        }
-    )
-
 
 @pytest.fixture
 def temp_scaler_path(tmp_path: Path) -> Path:

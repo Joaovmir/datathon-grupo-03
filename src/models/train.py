@@ -25,7 +25,7 @@ REFERENCE_PATH = Path(config["paths"]["reference_data"])
 # Tags obrigatórias MLflow
 required_tags = {
     "model_name": "credit_risk_mlp",
-    "model_version": "0.1.0",
+    "model_version": "1.0.0",
     "model_type": "classification",
     "training_data_version": "",
     "owner": "grupo-03",
