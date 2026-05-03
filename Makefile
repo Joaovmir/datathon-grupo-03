@@ -30,7 +30,7 @@ test:
 
 # Rodar treino com MLflow
 train:
-	uv run python src/models/train.py
+	PYTHONPATH=. uv run python src/models/train.py
 
 # Subir API
 serve:

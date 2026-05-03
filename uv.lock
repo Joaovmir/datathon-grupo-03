@@ -1027,6 +1027,7 @@ eda = [
     { name = "seaborn" },
 ]
 evaluation = [
+    { name = "openai" },
     { name = "ragas" },
 ]
 experiment = [
@@ -1080,7 +1081,10 @@ dev = [
     { name = "pytest-cov", specifier = ">=7.1.0" },
 ]
 eda = [{ name = "seaborn", specifier = ">=0.13.2" }]
-evaluation = [{ name = "ragas", specifier = ">=0.2" }]
+evaluation = [
+    { name = "openai", specifier = ">=2.32.0" },
+    { name = "ragas", specifier = ">=0.2" },
+]
 experiment = [{ name = "mlflow", specifier = ">=3.10.1" }]
 model = [
     { name = "llvmlite", specifier = ">=0.43.0" },
